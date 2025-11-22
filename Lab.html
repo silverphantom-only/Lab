@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="eS">
+<html lang="es">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -13,13 +13,14 @@
       --card:#f7f9fc;
       --brand-font: "Helvetica Neue", Arial, sans-serif;
     }
+
     body{
       margin:0;
       font-family:var(--brand-font);
       background:linear-gradient(180deg,#f1f4f8,white);
       color:var(--text);
-      -webkit-font-smoothing:antialiased;
     }
+
     header.appbar{
       display:flex;
       gap:16px;
@@ -31,215 +32,342 @@
       top:0;
       z-index:10;
     }
+
     .logo-preview{
       width:48px;height:48px;border-radius:8px;background:var(--card);
       display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--muted);
       overflow:hidden;
     }
+
     .app-title{font-weight:700;font-size:18px}
-    main{display:grid;grid-template-columns:420px 1fr;gap:20px;padding:20px;max-width:1200px;margin:18px auto;width:calc(100% - 48px);}
-    .panel{background:white;padding:16px;border-radius:10px;box-shadow:0 6px 20px rgba(30,40,60,0.06);overflow:auto;max-height:75vh}
-    .panel h2{margin:0 0 12px 0;font-size:16px}
+
+    main{
+      display:grid;
+      grid-template-columns:420px 1fr;
+      gap:20px;
+      padding:20px;
+      max-width:1200px;
+      margin:18px auto;
+      width:calc(100% - 48px);
+    }
+
+    .panel{
+      background:white;
+      padding:16px;
+      border-radius:10px;
+      box-shadow:0 6px 20px rgba(30,40,60,0.06);
+      overflow:auto;
+      max-height:75vh
+    }
+
     label{display:block;margin:8px 0 6px 0;font-size:13px;color:var(--muted)}
-    input[type="text"], input[type="color"], textarea, select{
+    input[type="text"], input[type="file"], input[type="color"], textarea{
       width:100%;padding:8px;border-radius:8px;border:1px solid #e5edf5;background:#fff;font-size:14px;
     }
-    textarea{min-height:70px;resize:vertical}
-    .row{display:flex;gap:10px}
-    .btn{appearance:none;border:0;padding:10px 12px;border-radius:8px;background:var(--accent);color:white;cursor:pointer;font-weight:600}
-    .btn.secondary{background:#f1f3f5;color:var(--text)}
-    .sections-list{margin-top:8px;display:flex;flex-direction:column;gap:10px}
-    .section-item{padding:8px;border-radius:8px;border:1px dashed #e6eef8;background:linear-gradient(180deg,#fff,#fbfdff)}
-    .section-item .controls{display:flex;gap:8px;align-items:center;margin-top:8px}
-    .preview-wrap{display:flex;flex-direction:column;gap:10px;height:75vh}
-    iframe#preview{flex:1;border-radius:10px;border:1px solid #e2e8f0;background:white}
-    .actions{display:flex;gap:8px;flex-wrap:wrap}
-    footer.credits{padding:12px;text-align:center;color:var(--muted);font-size:13px}
 
-    .hint{font-size:13px;color:#4b5563}
+    .btn{
+      appearance:none;border:0;padding:10px 12px;border-radius:8px;background:var(--accent);
+      color:white;cursor:pointer;font-weight:600
+    }
+    .btn.secondary{background:#f1f3f5;color:var(--text)}
+
+    .sections-list{margin-top:8px;display:flex;flex-direction:column;gap:10px}
+    .section-item{
+      padding:8px;border-radius:8px;border:1px dashed #e6eef8;
+      background:linear-gradient(180deg,#fff,#fbfdff)
+    }
+
+    iframe#preview{
+      flex:1;border-radius:10px;border:1px solid #e2e8f0;background:white;height:100%;
+    }
   </style>
 </head>
-<body>
-  <header class="appbar">
-    <div class="logo-preview" id="appLogo">LAB</div>
-    <div>
-      <div class="app-title">Generador de Páginas — Laboratoristas</div>
-      <div class="small">Plantillas replicables — cambia pocas cosas y listo</div>
-    </div>
-  </header>
 
-  <main>
-
-    <section class="panel">
-      <h2>Configuración básica</h2>
-
-      <label for="labName">Nombre del laboratorio</label>
-      <input id="labName" type="text" value="Laboratorio Clínico San José" />
-
-      <label for="tagline">Tagline / Descripción corta</label>
-      <input id="tagline" type="text" value="Diagnóstico confiable | Resultados rápidos" />
-
-      <label for="phoneNumber">Teléfono (para botón llamar)</label>
-      <input id="phoneNumber" type="text" placeholder="+521234567890" />   <!-- BOTÓN NUEVO -->
-
-      <label for="whatsappNumber">WhatsApp (solo números)</label>
-      <input id="whatsappNumber" type="text" placeholder="521234567890" />  <!-- BOTÓN NUEVO -->
-
-      <div class="row" style="margin-top:8px">
-        <div style="flex:1">
-          <label for="accent">Color principal</label>
-          <input id="accent" type="color" value="#0077c2" />
-        </div>
-        <div style="flex:1">
-          <label for="textColor">Color de texto</label>
-          <input id="textColor" type="color" value="#222222" />
-        </div>
-      </div>
-
-      <label for="logoFile">Logo</label>
-      <input id="logoFile" type="file" accept="image/*" />
-
-      <label for="heroImageUrl">Imagen Hero</label>
-      <input id="heroImageUrl" type="text" placeholder="https://..." />
-
-
-      <h2>Secciones</h2>
-      <div class="sections-list" id="sectionsList"></div>
-
-      <div style="display:flex;gap:8px;margin-top:10px">
-        <button class="btn" id="addSectionBtn">+ Añadir sección</button>
-        <button class="btn secondary" id="resetSectionsBtn">Restablecer plantilla</button>
-      </div>
-
-      <h2>Exportar</h2>
-      <div class="actions">
-        <button class="btn" id="generateBtn">Generar HTML</button>
-        <button class="btn secondary" id="downloadBtn">Descargar .html</button>
-        <button class="btn secondary" id="openNewTabBtn">Abrir en nueva pestaña</button>
-      </div>
-    </section>
-
-    <section class="panel preview-wrap">
-      <h2>Previsualización</h2>
-      <iframe id="preview"></iframe>
-    </section>
-
-  </main>
-
-  <footer class="credits">Hecho para laboratoristas — cambia textos, colores e imágenes</footer>
-
-  <script>
-
-  const defaultConfig = {
-    labName: "Laboratorio Clínico San José",
-    tagline: "Diagnóstico confiable | Resultados rápidos",
-    accent: "#0077c2",
-    textColor: "#222",
-    logoData: null,
-    heroImage: "",
-    phoneNumber: "",
-    whatsappNumber: "",
-    sections: [
-      { id: idGen(), title: "Sobre nosotros", content: "<p>Más de 15 años brindando resultados confiables.</p>" },
-      { id: idGen(), title: "Servicios", content: "<ul><li>Hematología</li><li>Bioquímica</li></ul>" },
-      { id: idGen(), title: "Contacto", content: "<p>Dirección ejemplo.</p>" }
-    ]
-  };
-
-  const state = JSON.parse(JSON.stringify(defaultConfig));
-  const el = id => document.getElementById(id);
-
-  function idGen(){ return 's-'+Math.random().toString(36).substr(2,9); }
-
-  const phoneInput = el("phoneNumber");
-  const whatsappInput = el("whatsappNumber");
-
-  phoneInput.addEventListener("input", ()=>{
-    state.phoneNumber = phoneInput.value;
-    updatePreview();
-  });
-
-  whatsappInput.addEventListener("input", ()=>{
-    state.whatsappNumber = whatsappInput.value;
-    updatePreview();
-  });
-
-  /* ------------ RESTO DEL CÓDIGO IGUAL, SOLO AGREGO BOTONES EN generateFullHTML() ----------------- */
-
-  function generateFullHTML(){
-
-    const callBtn = state.phoneNumber ? `
-      <a href="tel:${state.phoneNumber}" style="
-        display:inline-block;padding:12px 18px;background:#0077c2;color:white;
-        border-radius:8px;text-decoration:none;font-weight:600;margin-right:10px;
-      ">📞 Llamar</a>` : "";
-
-    const waBtn = state.whatsappNumber ? `
-      <a href="https://wa.me/${state.whatsappNumber}" target="_blank" style="
-        display:inline-block;padding:12px 18px;background:#25D366;color:white;
-        border-radius:8px;text-decoration:none;font-weight:600;
-      ">💬 WhatsApp</a>` : "";
-
-    const sectionsHtml = state.sections.map(s=>`
-      <section class="site-section">
-        <div class="container">
-          <h2>${s.title}</h2>
-          <div>${s.content}</div>
-          ${s.title.toLowerCase().includes("contacto") ? `<div style="margin-top:20px">${callBtn} ${waBtn}</div>` : ""}
-        </div>
-      </section>
-    `).join("");
-
-    return `
-<!doctype html>
-<html lang="es">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>${state.labName}</title>
-<style>
-  body{font-family:Arial;margin:0;color:${state.textColor}}
-  .topbar{padding:20px;background:white;box-shadow:0 2px 8px rgba(0,0,0,.05)}
-  .container{max-width:960px;margin:auto;padding:20px}
-  .hero{padding:40px;background:#f4f6f9}
-</style>
-</head>
 <body>
 
-<header class="topbar">
-  <div class="container"><strong>${state.labName}</strong></div>
+<header class="appbar">
+  <div class="logo-preview" id="appLogo">LAB</div>
+  <div>
+    <div class="app-title">Generador de Páginas — Laboratoristas</div>
+    <div class="small">Plantillas replicables — cambia pocas cosas y listo</div>
+  </div>
 </header>
 
-<section class="hero">
+<main>
+  <!-- ========== PANEL IZQUIERDO ========== -->
+  <section class="panel">
+    <h2>Configuración básica</h2>
+
+    <label>Nombre del laboratorio</label>
+    <input id="labName" type="text" value="Laboratorio Clínico San José">
+
+    <label>Descripción corta</label>
+    <input id="tagline" type="text" value="Diagnóstico confiable | Resultados rápidos">
+
+    <label>Teléfono de llamadas</label>
+    <input id="phoneNumber" type="text" placeholder="+521000000000">
+
+    <label>WhatsApp</label>
+    <input id="whatsappNumber" type="text" placeholder="+521000000000">
+
+    <label>Color principal</label>
+    <input id="accent" type="color" value="#0077c2">
+
+    <label>Color del texto</label>
+    <input id="textColor" type="color" value="#222222">
+
+    <label>Logo (opcional)</label>
+    <input id="logoFile" type="file" accept="image/*">
+
+    <label>Imagen de cabecera (URL)</label>
+    <input id="heroImageUrl" type="text" placeholder="https://...">
+
+    <h2>Secciones</h2>
+    <div class="sections-list" id="sectionsList"></div>
+
+    <button class="btn" id="addSectionBtn">Añadir sección</button>
+    <button class="btn secondary" id="resetSectionsBtn">Restablecer plantilla</button>
+
+    <h2>Exportar</h2>
+    <button class="btn" id="generateBtn">Generar HTML</button>
+    <button class="btn secondary" id="downloadBtn">Descargar .html</button>
+    <button class="btn secondary" id="openNewTabBtn">Abrir previsualización</button>
+  </section>
+
+  <!-- ========== PANEL DERECHO: PREVIEW ========== -->
+  <section class="panel" style="display:flex;flex-direction:column">
+    <h2>Previsualización</h2>
+    <iframe id="preview"></iframe>
+  </section>
+</main>
+
+
+<script>
+/* ==========================================================
+   ESTADO INICIAL
+========================================================== */
+const defaultConfig = {
+  labName: "Laboratorio Clínico San José",
+  tagline: "Diagnóstico confiable | Resultados rápidos",
+  accent: "#0077c2",
+  textColor: "#222",
+  heroImage: "",
+  logoData: "",
+  phoneNumber: "",
+  whatsappNumber: "",
+  sections: [
+    { id: idGen(), title: "Sobre nosotros", content: "<p>Somos un laboratorio clínico comprometido con la precisión y rapidez.</p>" },
+    { id: idGen(), title: "Servicios", content: "<ul><li>Biometría Hemática</li><li>Pruebas PCR</li><li>Química Sanguínea</li></ul>" },
+    { id: idGen(), title: "Contacto", content: "<p>Dirección: Av. Siempre Viva 123<br>Email: info@laboratorio.com</p>" }
+  ]
+};
+
+const state = JSON.parse(JSON.stringify(defaultConfig));
+function idGen(){ return "id-" + Math.random().toString(36).substring(2,9); }
+
+const el = id => document.getElementById(id);
+
+/* ==========================================================
+   ASIGNAR INPUTS
+========================================================== */
+const labNameInput = el("labName");
+const taglineInput = el("tagline");
+const phoneInput = el("phoneNumber");
+const waInput = el("whatsappNumber");
+const accentInput = el("accent");
+const textColorInput = el("textColor");
+const heroInput = el("heroImageUrl");
+const logoInput = el("logoFile");
+const sectionsList = el("sectionsList");
+const previewIframe = el("preview");
+
+/* ==========================================================
+   EVENTOS DE INPUT (ACTUALIZA PREVIEW)
+========================================================== */
+labNameInput.oninput = ()=>{ state.labName = labNameInput.value; updatePreview(); };
+taglineInput.oninput = ()=>{ state.tagline = taglineInput.value; updatePreview(); };
+phoneInput.oninput = ()=>{ state.phoneNumber = phoneInput.value; updatePreview(); };
+waInput.oninput = ()=>{ state.whatsappNumber = waInput.value; updatePreview(); };
+accentInput.oninput = ()=>{ state.accent = accentInput.value; updatePreview(); };
+textColorInput.oninput = ()=>{ state.textColor = textColorInput.value; updatePreview(); };
+heroInput.oninput = ()=>{ state.heroImage = heroInput.value; updatePreview(); };
+
+logoInput.onchange = e=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ev=>{
+    state.logoData = ev.target.result;
+    updatePreview();
+  };
+  reader.readAsDataURL(file);
+};
+
+/* ==========================================================
+   RENDER SECCIONES EN EL PANEL IZQUIERDO
+========================================================== */
+function renderSections(){
+  sectionsList.innerHTML = "";
+  state.sections.forEach(sec=>{
+    const box = document.createElement("div");
+    box.className = "section-item";
+
+    box.innerHTML = `
+      <input class="titleInput" value="${sec.title}" style="width:100%;margin-bottom:6px">
+      <textarea class="contentInput" style="min-height:70px">${sec.content}</textarea>
+      <button class="btn saveBtn">Guardar</button>
+    `;
+
+    const titleInput = box.querySelector(".titleInput");
+    const contentInput = box.querySelector(".contentInput");
+
+    box.querySelector(".saveBtn").onclick = ()=>{
+      sec.title = titleInput.value;
+      sec.content = contentInput.value;
+      updatePreview();
+    };
+
+    sectionsList.appendChild(box);
+  });
+}
+
+/* ==========================================================
+   GENERADOR DE LANDING FINAL
+========================================================== */
+function generateLandingHTML(){
+
+  /* === BOTONES === */
+  const callBtn = state.phoneNumber ? `
+    <a href="tel:${state.phoneNumber}" style="
+      display:inline-block;padding:12px 18px;background:${state.accent};
+      color:white;border-radius:8px;text-decoration:none;margin-right:10px;
+    ">📞 Llamar</a>` : "";
+
+  const waBtn = state.whatsappNumber ? `
+    <a href="https://wa.me/${state.whatsappNumber}" target="_blank" style="
+      display:inline-block;padding:12px 18px;background:#25D366;
+      color:white;border-radius:8px;text-decoration:none;
+    ">💬 WhatsApp</a>` : "";
+
+  /* === TRADUCCIÓN AUTOMÁTICA === */
+  const lang = navigator.language.startsWith("en") ? "en" : "es";
+
+  const dict = {
+    es: {
+      contact: "Contacto",
+      call: "Llamar",
+      whatsapp: "WhatsApp"
+    },
+    en: {
+      contact: "Contact",
+      call: "Call",
+      whatsapp: "WhatsApp"
+    }
+  };
+
+  const t = dict[lang];
+
+  /* === SECCIONES === */
+  const sectionsHTML = state.sections.map(s=>`
+    <section style="padding:30px;border-top:1px solid #eee">
+      <div style="max-width:900px;margin:auto">
+        <h2 style="color:${state.accent}">${s.title}</h2>
+        <div>${s.content}</div>
+
+        ${
+          s.title.trim().toLowerCase() === "contacto"
+          ? `<div style="margin-top:20px">${callBtn}${waBtn}</div>`
+          : ""
+        }
+      </div>
+    </section>
+  `).join("");
+
+  /* === PÁGINA FINAL === */
+  return `
+<!doctype html>
+<html lang="${lang}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${state.labName}</title>
+
+<style>
+  body{ font-family:Arial;margin:0;color:${state.textColor}; }
+  header{
+    padding:20px;background:white;
+    box-shadow:0 2px 8px rgba(0,0,0,.05)
+  }
+  .container{ max-width:900px;margin:auto; }
+  .hero{
+    padding:40px;background:#f4f6f9;
+  }
+</style>
+</head>
+
+<body>
+
+<header>
   <div class="container">
     <h1>${state.labName}</h1>
     <p>${state.tagline}</p>
   </div>
+</header>
+
+<section class="hero">
+  <div class="container">
+    ${ state.heroImage ? `<img src="${state.heroImage}" style="width:100%;border-radius:10px">` : "" }
+  </div>
 </section>
 
-${sectionsHtml}
+${sectionsHTML}
 
-<footer class="container" style="padding:40px 20px;color:#666">
+<footer style="padding:40px;text-align:center;color:#555">
   © ${new Date().getFullYear()} ${state.labName}
 </footer>
 
 </body>
-</html>`;
-  }
+</html>
+  `;
+}
 
-  /* resto del script igual — render, preview, etc. */
+/* ==========================================================
+   PREVISUALIZAR
+========================================================== */
+function updatePreview(){
+  const html = generateLandingHTML();
+  const blob = new Blob([html], {type:"text/html"});
+  const url = URL.createObjectURL(blob);
+  previewIframe.src = url;
+  setTimeout(()=>URL.revokeObjectURL(url),5000);
+}
 
-  // Initialization
-  function updatePreview(){
-    const html = generateFullHTML();
-    const blob = new Blob([html],{type:"text/html"});
-    const url = URL.createObjectURL(blob);
-    preview.src = url;
-  }
+/* ==========================================================
+   EXPORTAR
+========================================================== */
+el("downloadBtn").onclick = ()=>{
+  const html = generateLandingHTML();
+  const blob = new Blob([html], {type:"text/html"});
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = state.labName.replace(/\s+/g,"_")+".html";
+  link.click();
+};
 
-  updatePreview();
+el("openNewTabBtn").onclick = ()=>{
+  const html = generateLandingHTML();
+  const blob = new Blob([html], {type:"text/html"});
+  const url = URL.createObjectURL(blob);
+  window.open(url,"_blank");
+};
 
-  </script>
+/* ==========================================================
+   INICIALIZAR
+========================================================== */
+renderSections();
+updatePreview();
+</script>
 
 </body>
 </html>
+
