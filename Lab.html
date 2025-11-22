@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Generador de páginas para Laboratoristas</title>
+
   <style>
     :root{
       --accent:#0077c2;
@@ -19,6 +20,8 @@
       font-family:var(--brand-font);
       background:linear-gradient(180deg,#f1f4f8,white);
       color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
     }
 
     header.appbar{
@@ -57,317 +60,720 @@
       border-radius:10px;
       box-shadow:0 6px 20px rgba(30,40,60,0.06);
       overflow:auto;
-      max-height:75vh
+      max-height:75vh;
     }
 
-    label{display:block;margin:8px 0 6px 0;font-size:13px;color:var(--muted)}
-    input[type="text"], input[type="file"], input[type="color"], textarea{
-      width:100%;padding:8px;border-radius:8px;border:1px solid #e5edf5;background:#fff;font-size:14px;
+    .panel h2{margin:0 0 12px 0;font-size:16px}
+
+    label{
+      display:block;
+      margin:8px 0 6px 0;
+      font-size:13px;
+      color:var(--muted);
     }
+
+    input[type="text"], input[type="color"], textarea, select{
+      width:100%;
+      padding:8px;
+      border-radius:8px;
+      border:1px solid #e5edf5;
+      background:#fff;
+      box-sizing:border-box;
+      font-size:14px;
+    }
+
+    textarea{min-height:70px;resize:vertical}
+
+    .row{display:flex;gap:10px}
 
     .btn{
-      appearance:none;border:0;padding:10px 12px;border-radius:8px;background:var(--accent);
-      color:white;cursor:pointer;font-weight:600
+      appearance:none;
+      border:0;
+      padding:10px 12px;
+      border-radius:8px;
+      background:var(--accent);
+      color:white;
+      cursor:pointer;
+      font-weight:600;
     }
-    .btn.secondary{background:#f1f3f5;color:var(--text)}
+
+    .btn.secondary{
+      background:#f1f3f5;
+      color:var(--text);
+    }
 
     .sections-list{margin-top:8px;display:flex;flex-direction:column;gap:10px}
+
     .section-item{
-      padding:8px;border-radius:8px;border:1px dashed #e6eef8;
-      background:linear-gradient(180deg,#fff,#fbfdff)
+      padding:8px;
+      border-radius:8px;
+      border:1px dashed #e6eef8;
+      background:linear-gradient(180deg,#fff,#fbfdff);
     }
 
+    .section-item .controls{display:flex;gap:8px;align-items:center;margin-top:8px}
+
+    .preview-wrap{display:flex;flex-direction:column;gap:10px;height:75vh}
+
     iframe#preview{
-      flex:1;border-radius:10px;border:1px solid #e2e8f0;background:white;height:100%;
+      flex:1;
+      border-radius:10px;
+      border:1px solid #e2e8f0;
+      background:white;
     }
+
+    .actions{display:flex;gap:8px;flex-wrap:wrap}
+
+    .small{font-size:12px;color:var(--muted)}
+
+    .help{font-size:13px;color:var(--muted);margin-top:8px}
+
+    footer.credits{
+      padding:12px;
+      text-align:center;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .hint{font-size:13px;color:#4b5563}
+
+    .color-swatch{
+      display:inline-block;
+      width:18px;height:18px;
+      border-radius:4px;
+      border:1px solid rgba(0,0,0,0.06);
+      vertical-align:middle;
+      margin-left:6px;
+    }
+
+    /* ---------------------------
+       NUEVO SISTEMA DE SERVICIOS
+       --------------------------- */
+
+    .service-row{
+      border:1px solid #dfe7f3;
+      padding:10px;
+      border-radius:8px;
+      background:#f9fbff;
+      margin-bottom:8px;
+    }
+
+    .service-row input,
+    .service-row textarea{
+      margin-top:4px;
+    }
+
+    .service-actions{
+      display:flex;
+      gap:6px;
+      margin-top:8px;
+    }
+
+    .service-card{
+      background:white;
+      border-radius:10px;
+      padding:16px;
+      border:1px solid #e3e9f5;
+      box-shadow:0 4px 15px rgba(20,40,80,0.04);
+      margin-bottom:14px;
+    }
+
+    .service-title{
+      font-size:18px;
+      font-weight:700;
+    }
+
+    .service-price{
+      font-size:17px;
+      color:var(--accent);
+      margin:4px 0 8px 0;
+      font-weight:600;
+    }
+
+    .service-desc{
+      color:#444;
+      line-height:1.45;
+      margin-bottom:10px;
+    }
+
+    .service-btns{
+      display:flex;
+      gap:10px;
+    }
+
+    .service-btn{
+      flex:1;
+      padding:10px;
+      border-radius:8px;
+      color:white;
+      text-align:center;
+      text-decoration:none;
+      font-weight:600;
+      display:block;
+    }
+
+    .btn-wsp{background:#25d366}
+    .btn-call{background:#0077c2}
+
   </style>
 </head>
 
 <body>
+  <header class="appbar">
+    <div class="logo-preview" id="appLogo">LAB</div>
 
-<header class="appbar">
-  <div class="logo-preview" id="appLogo">LAB</div>
-  <div>
-    <div class="app-title">Generador de Páginas — Laboratoristas</div>
-    <div class="small">Plantillas replicables — cambia pocas cosas y listo</div>
-  </div>
-</header>
+    <div>
+      <div class="app-title">Generador de Páginas — Laboratoristas</div>
+      <div class="small">Plantillas replicables — cambia pocas cosas y listo</div>
+    </div>
+  </header>
 
-<main>
-  <!-- ========== PANEL IZQUIERDO ========== -->
-  <section class="panel">
-    <h2>Configuración básica</h2>
+  <main>
+    <!-- LEFT: controles -->
+    <section class="panel" aria-label="Controles">
 
-    <label>Nombre del laboratorio</label>
-    <input id="labName" type="text" value="Laboratorio Clínico San José">
+      <h2>Configuración básica</h2>
 
-    <label>Descripción corta</label>
-    <input id="tagline" type="text" value="Diagnóstico confiable | Resultados rápidos">
+      <label for="labName">Nombre del laboratorio</label>
+      <input id="labName" type="text" value="Laboratorio Clínico San José" />
 
-    <label>Teléfono de llamadas</label>
-    <input id="phoneNumber" type="text" placeholder="+521000000000">
+      <label for="tagline">Tagline / Descripción corta</label>
+      <input id="tagline" type="text" value="Diagnóstico confiable | Resultados rápidos" />
 
-    <label>WhatsApp</label>
-    <input id="whatsappNumber" type="text" placeholder="+521000000000">
+      <div class="row" style="margin-top:8px">
+        <div style="flex:1">
+          <label for="accent">Color principal</label>
+          <input id="accent" type="color" value="#0077c2" />
+        </div>
 
-    <label>Color principal</label>
-    <input id="accent" type="color" value="#0077c2">
+        <div style="flex:1">
+          <label for="textColor">Color de texto</label>
+          <input id="textColor" type="color" value="#222222" />
+        </div>
+      </div>
 
-    <label>Color del texto</label>
-    <input id="textColor" type="color" value="#222222">
+      <label for="logoFile">Logo (PNG/JPG, opcional)</label>
+      <input id="logoFile" type="file" accept="image/*" />
 
-    <label>Logo (opcional)</label>
-    <input id="logoFile" type="file" accept="image/*">
+      <label for="heroImageUrl">URL de imagen de cabecera (opcional)</label>
+      <input id="heroImageUrl" type="text" placeholder="https://..." />
+      <!-- ============================
+           NUEVO SISTEMA DE SERVICIOS
+         ============================-->
 
-    <label>Imagen de cabecera (URL)</label>
-    <input id="heroImageUrl" type="text" placeholder="https://...">
+      <h2 style="margin-top:20px">Servicios (con precios)</h2>
 
-    <h2>Secciones</h2>
-    <div class="sections-list" id="sectionsList"></div>
+      <div id="servicesList"></div>
 
-    <button class="btn" id="addSectionBtn">Añadir sección</button>
-    <button class="btn secondary" id="resetSectionsBtn">Restablecer plantilla</button>
+      <button id="addServiceBtn" class="btn" style="margin-top:10px">+ Añadir servicio</button>
 
-    <h2>Exportar</h2>
-    <button class="btn" id="generateBtn">Generar HTML</button>
-    <button class="btn secondary" id="downloadBtn">Descargar .html</button>
-    <button class="btn secondary" id="openNewTabBtn">Abrir previsualización</button>
-  </section>
 
-  <!-- ========== PANEL DERECHO: PREVIEW ========== -->
-  <section class="panel" style="display:flex;flex-direction:column">
-    <h2>Previsualización</h2>
-    <iframe id="preview"></iframe>
-  </section>
-</main>
+      <!-- ====================================================
+           RESTO DEL PANEL IZQUIERDO (SECCIONES GENERALES)
+      ===================================================== -->
 
+      <div style="height:18px"></div>
+
+      <h2>Secciones adicionales (editable)</h2>
+
+      <div class="sections-list" id="sectionsList">
+        <!-- Render dinámico -->
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="btn" id="addSectionBtn">+ Añadir sección</button>
+        <button class="btn secondary" id="resetSectionsBtn">Restablecer plantilla</button>
+      </div>
+
+
+      <div style="height:14px"></div>
+
+      <h2>Exportar / Previsualizar</h2>
+      <div class="actions">
+        <button class="btn" id="generateBtn">Generar HTML</button>
+        <button class="btn secondary" id="downloadBtn">Descargar .html</button>
+        <button class="btn secondary" id="openNewTabBtn">Abrir en nueva pestaña</button>
+      </div>
+
+      <div class="help">Tip: puedes reordenar servicios y secciones libremente. ✔️</div>
+    </section>
+
+
+    <!-- ======================
+         RIGHT: PREVIEW
+    ====================== -->
+
+    <section class="panel preview-wrap" aria-label="Previsualización">
+      <h2>Previsualización</h2>
+      <iframe id="preview" title="Vista previa"></iframe>
+      <div class="small">
+        Las modificaciones se reflejan en la vista previa.  
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="credits">
+    Hecho para laboratoristas — cambia textos, colores e imágenes ☑️
+  </footer>
+
+
+  <!-- ====================================================
+       ===================== SCRIPT ========================
+       ====================================================-->
 
 <script>
-/* ==========================================================
-   ESTADO INICIAL
-========================================================== */
+/* ===========================================================
+   SISTEMA DE DATOS INICIAL
+   =========================================================== */
+
 const defaultConfig = {
   labName: "Laboratorio Clínico San José",
   tagline: "Diagnóstico confiable | Resultados rápidos",
   accent: "#0077c2",
-  textColor: "#222",
+  textColor: "#222222",
+  logoData: null,
   heroImage: "",
-  logoData: "",
-  phoneNumber: "",
-  whatsappNumber: "",
+
+  services: [
+    {
+      id: idGen(),
+      icon: "🧪",
+      name: "Biometría Hemática",
+      price: "$180 MXN",
+      desc: "Estudio general para evaluar células sanguíneas."
+    },
+    {
+      id: idGen(),
+      icon: "🧬",
+      name: "Prueba PCR",
+      price: "$850 MXN",
+      desc: "Detección molecular de virus mediante PCR."
+    }
+  ],
+
   sections: [
-    { id: idGen(), title: "Sobre nosotros", content: "<p>Somos un laboratorio clínico comprometido con la precisión y rapidez.</p>" },
-    { id: idGen(), title: "Servicios", content: "<ul><li>Biometría Hemática</li><li>Pruebas PCR</li><li>Química Sanguínea</li></ul>" },
-    { id: idGen(), title: "Contacto", content: "<p>Dirección: Av. Siempre Viva 123<br>Email: info@laboratorio.com</p>" }
+    { id: idGen(), title: "Sobre nosotros", content: "<p>Somos un laboratorio clínico con más de 15 años de experiencia.</p>" },
+    { id: idGen(), title: "Contacto", content: "<p>Dirección: Av. Siempre Viva 123<br>Tel: +52 55 0000 0000</p>" }
   ]
 };
 
+
+/* ===========================================================
+   VARIABLES DE APLICACIÓN
+   =========================================================== */
+
 const state = JSON.parse(JSON.stringify(defaultConfig));
-function idGen(){ return "id-" + Math.random().toString(36).substring(2,9); }
+const el = (id) => document.getElementById(id);
 
-const el = id => document.getElementById(id);
+const servicesList = el("servicesList");
+const addServiceBtn = el("addServiceBtn");
 
-/* ==========================================================
-   ASIGNAR INPUTS
-========================================================== */
-const labNameInput = el("labName");
-const taglineInput = el("tagline");
-const phoneInput = el("phoneNumber");
-const waInput = el("whatsappNumber");
-const accentInput = el("accent");
+const labNameInput   = el("labName");
+const taglineInput   = el("tagline");
+const accentInput    = el("accent");
 const textColorInput = el("textColor");
-const heroInput = el("heroImageUrl");
-const logoInput = el("logoFile");
-const sectionsList = el("sectionsList");
-const previewIframe = el("preview");
+const logoFileInput  = el("logoFile");
+const heroImageInput = el("heroImageUrl");
 
-/* ==========================================================
-   EVENTOS DE INPUT (ACTUALIZA PREVIEW)
-========================================================== */
-labNameInput.oninput = ()=>{ state.labName = labNameInput.value; updatePreview(); };
-taglineInput.oninput = ()=>{ state.tagline = taglineInput.value; updatePreview(); };
-phoneInput.oninput = ()=>{ state.phoneNumber = phoneInput.value; updatePreview(); };
-waInput.oninput = ()=>{ state.whatsappNumber = waInput.value; updatePreview(); };
-accentInput.oninput = ()=>{ state.accent = accentInput.value; updatePreview(); };
-textColorInput.oninput = ()=>{ state.textColor = textColorInput.value; updatePreview(); };
-heroInput.oninput = ()=>{ state.heroImage = heroInput.value; updatePreview(); };
+const logoBox        = el("appLogo");
+const sectionsList   = el("sectionsList");
 
-logoInput.onchange = e=>{
-  const file = e.target.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = ev=>{
-    state.logoData = ev.target.result;
-    updatePreview();
-  };
-  reader.readAsDataURL(file);
-};
+const addSectionBtn     = el("addSectionBtn");
+const resetSectionsBtn  = el("resetSectionsBtn");
+const generateBtn       = el("generateBtn");
+const downloadBtn       = el("downloadBtn");
+const openNewTabBtn     = el("openNewTabBtn");
+const previewIframe     = el("preview");
 
-/* ==========================================================
-   RENDER SECCIONES EN EL PANEL IZQUIERDO
-========================================================== */
-function renderSections(){
-  sectionsList.innerHTML = "";
-  state.sections.forEach(sec=>{
-    const box = document.createElement("div");
-    box.className = "section-item";
 
-    box.innerHTML = `
-      <input class="titleInput" value="${sec.title}" style="width:100%;margin-bottom:6px">
-      <textarea class="contentInput" style="min-height:70px">${sec.content}</textarea>
-      <button class="btn saveBtn">Guardar</button>
+/* ===========================================================
+   RENDER DE SERVICIOS
+   =========================================================== */
+
+function renderServices() {
+  servicesList.innerHTML = "";
+
+  state.services.forEach((srv, i) => {
+    const d = document.createElement("div");
+    d.className = "service-row";
+    d.dataset.id = srv.id;
+
+    d.innerHTML = `
+      <label>Ícono (emoji o URL)</label>
+      <input type="text" class="srv-icon" value="${srv.icon}"/>
+
+      <label>Nombre del servicio</label>
+      <input type="text" class="srv-name" value="${srv.name}"/>
+
+      <label>Precio</label>
+      <input type="text" class="srv-price" value="${srv.price}"/>
+
+      <label>Descripción</label>
+      <textarea class="srv-desc">${srv.desc}</textarea>
+
+      <div class="service-actions">
+        <button class="btn saveServiceBtn">Guardar</button>
+        <button class="btn secondary delServiceBtn">Eliminar</button>
+        <button class="btn secondary upServiceBtn">↑</button>
+        <button class="btn secondary downServiceBtn">↓</button>
+      </div>
     `;
 
-    const titleInput = box.querySelector(".titleInput");
-    const contentInput = box.querySelector(".contentInput");
-
-    box.querySelector(".saveBtn").onclick = ()=>{
-      sec.title = titleInput.value;
-      sec.content = contentInput.value;
-      updatePreview();
-    };
-
-    sectionsList.appendChild(box);
+    servicesList.appendChild(d);
   });
 }
 
-/* ==========================================================
-   GENERADOR DE LANDING FINAL
-========================================================== */
-function generateLandingHTML(){
 
-  /* === BOTONES === */
-  const callBtn = state.phoneNumber ? `
-    <a href="tel:${state.phoneNumber}" style="
-      display:inline-block;padding:12px 18px;background:${state.accent};
-      color:white;border-radius:8px;text-decoration:none;margin-right:10px;
-    ">📞 Llamar</a>` : "";
+/* ===========================================================
+   EVENTOS DE SERVICIOS
+   =========================================================== */
 
-  const waBtn = state.whatsappNumber ? `
-    <a href="https://wa.me/${state.whatsappNumber}" target="_blank" style="
-      display:inline-block;padding:12px 18px;background:#25D366;
-      color:white;border-radius:8px;text-decoration:none;
-    ">💬 WhatsApp</a>` : "";
+servicesList.addEventListener("click", (ev) => {
+  const box = ev.target.closest(".service-row");
+  if (!box) return;
 
-  /* === TRADUCCIÓN AUTOMÁTICA === */
-  const lang = navigator.language.startsWith("en") ? "en" : "es";
+  const id = box.dataset.id;
+  const srv = state.services.find(s => s.id === id);
 
-  const dict = {
-    es: {
-      contact: "Contacto",
-      call: "Llamar",
-      whatsapp: "WhatsApp"
-    },
-    en: {
-      contact: "Contact",
-      call: "Call",
-      whatsapp: "WhatsApp"
+  if (ev.target.classList.contains("saveServiceBtn")) {
+    srv.icon = box.querySelector(".srv-icon").value;
+    srv.name = box.querySelector(".srv-name").value;
+    srv.price = box.querySelector(".srv-price").value;
+    srv.desc = box.querySelector(".srv-desc").value;
+
+    updatePreview();
+  }
+
+  if (ev.target.classList.contains("delServiceBtn")) {
+    state.services = state.services.filter(s => s.id !== id);
+    renderServices();
+    updatePreview();
+  }
+
+  if (ev.target.classList.contains("upServiceBtn")) {
+    const index = state.services.findIndex(s => s.id === id);
+    if (index > 0) {
+      [state.services[index - 1], state.services[index]] =
+        [state.services[index], state.services[index - 1]];
+      renderServices();
+      updatePreview();
     }
-  };
+  }
 
-  const t = dict[lang];
+  if (ev.target.classList.contains("downServiceBtn")) {
+    const index = state.services.findIndex(s => s.id === id);
+    if (index < state.services.length - 1) {
+      [state.services[index + 1], state.services[index]] =
+        [state.services[index], state.services[index + 1]];
+      renderServices();
+      updatePreview();
+    }
+  }
+});
 
-  /* === SECCIONES === */
-  const sectionsHTML = state.sections.map(s=>`
-    <section style="padding:30px;border-top:1px solid #eee">
-      <div style="max-width:900px;margin:auto">
-        <h2 style="color:${state.accent}">${s.title}</h2>
-        <div>${s.content}</div>
 
-        ${
-          s.title.trim().toLowerCase() === "contacto"
-          ? `<div style="margin-top:20px">${callBtn}${waBtn}</div>`
-          : ""
-        }
+addServiceBtn.addEventListener("click", () => {
+  state.services.push({
+    id: idGen(),
+    icon: "🩺",
+    name: "Nuevo servicio",
+    price: "$0 MXN",
+    desc: "Descripción del servicio"
+  });
+  renderServices();
+  updatePreview();
+});
+
+
+/* ===========================================================
+   RENDER DE SECCIONES (SE MANTIENE COMO EN PARTE 1)
+   =========================================================== */
+
+function renderSectionsControls() {
+  sectionsList.innerHTML = "";
+
+  state.sections.forEach((s) => {
+    const item = document.createElement("div");
+    item.className = "section-item";
+    item.dataset.id = s.id;
+
+    item.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <strong>${escapeHtml(s.title)}</strong>
+        <div style="display:flex;gap:6px">
+          <button class="btn small editBtn">Editar</button>
+          <button class="btn secondary small delBtn">Eliminar</button>
+        </div>
       </div>
-    </section>
-  `).join("");
 
-  /* === PÁGINA FINAL === */
+      <div style="margin-top:8px">
+        <div class="s-content"
+             style="min-height:60px;padding:8px;border-radius:6px;border:1px solid #eef6ff;background:#fff"
+             contenteditable="true">${s.content}</div>
+
+        <div class="controls">
+          <input type="text" class="s-title-input" value="${escapeAttr(s.title)}" style="flex:1" />
+          <button class="btn saveBtn small">Guardar</button>
+        </div>
+      </div>
+    `;
+
+    sectionsList.appendChild(item);
+  });
+}
+
+/* ===========================================================
+   EVENTOS DE SECCIONES
+   =========================================================== */
+
+sectionsList.addEventListener("click", (e) => {
+  const item = e.target.closest(".section-item");
+  if (!item) return;
+
+  const id = item.dataset.id;
+  const section = state.sections.find((s) => s.id === id);
+
+  if (e.target.classList.contains("delBtn")) {
+    state.sections = state.sections.filter((s) => s.id !== id);
+    renderSectionsControls();
+    updatePreview();
+  }
+
+  if (e.target.classList.contains("saveBtn")) {
+    const newTitle = item.querySelector(".s-title-input").value;
+    const newContent = item.querySelector(".s-content").innerHTML;
+
+    section.title = newTitle;
+    section.content = newContent;
+
+    renderSectionsControls();
+    updatePreview();
+  }
+});
+
+addSectionBtn.addEventListener("click", () => {
+  state.sections.push({
+    id: idGen(),
+    title: "Nueva sección",
+    content: "<p>Contenido de la nueva sección.</p>"
+  });
+  renderSectionsControls();
+  updatePreview();
+});
+
+resetSectionsBtn.addEventListener("click", () => {
+  state.sections = JSON.parse(JSON.stringify(defaultConfig.sections));
+  renderSectionsControls();
+  updatePreview();
+});
+
+
+/* ===========================================================
+   ACTUALIZAR DATOS GENERALES
+   =========================================================== */
+
+labNameInput.addEventListener("input", () => { state.labName = labNameInput.value; updatePreview(); });
+taglineInput.addEventListener("input", () => { state.tagline = taglineInput.value; updatePreview(); });
+accentInput.addEventListener("input", () => { state.accent = accentInput.value; updatePreview(); });
+textColorInput.addEventListener("input", () => { state.textColor = textColorInput.value; updatePreview(); });
+heroImageInput.addEventListener("input", () => { state.heroImage = heroImageInput.value; updatePreview(); });
+
+
+/* LOGO BASE64 */
+logoFileInput.addEventListener("change", () => {
+  const file = logoFileInput.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    state.logoData = e.target.result;
+    logoBox.src = e.target.result;
+    updatePreview();
+  };
+  reader.readAsDataURL(file);
+});
+
+
+/* ===========================================================
+   GENERAR HTML FINAL
+   =========================================================== */
+
+function generateFinalHtml() {
+  const { labName, tagline, accent, textColor, logoData, heroImage, services, sections } = state;
+
+  const serviceCards = services.map((s) => {
+    const iconHtml = s.icon
+      ? (s.icon.startsWith("http") ? `<img src="${s.icon}" style="width:50px;height:50px;border-radius:6px;border:1px solid #ddd">`
+                                  : `<div style="font-size:40px">${s.icon}</div>`)
+      : "";
+
+    return `
+      <div class="service-card">
+        <div class="s-icon">${iconHtml}</div>
+        <div class="s-info">
+          <h3>${escapeHtml(s.name)}</h3>
+          <div class="price">${escapeHtml(s.price)}</div>
+          <p class="desc">${escapeHtml(s.desc)}</p>
+
+          <div class="buttons">
+            <a class="btn consult" href="https://wa.me/?text=${encodeURIComponent(
+              "Hola, quiero información sobre: " + s.name
+            )}" target="_blank">💬 Consultar</a>
+
+            <a class="btn reserve" href="https://wa.me/?text=${encodeURIComponent(
+              "Hola, quiero agendar una cita para: " + s.name + (s.price ? " (" + s.price + ")" : "")
+            )}" target="_blank">📅 Reservar / Agendar</a>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join("");
+
+
+  const sectionsHtml = sections
+    .map((s) => `<section class="box"><h2>${escapeHtml(s.title)}</h2>${s.content}</section>`)
+    .join("");
+
+
   return `
-<!doctype html>
-<html lang="${lang}">
+<!DOCTYPE html>
+<html lang="es">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${state.labName}</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>${escapeHtml(labName)}</title>
 
 <style>
-  body{ font-family:Arial;margin:0;color:${state.textColor}; }
-  header{
-    padding:20px;background:white;
-    box-shadow:0 2px 8px rgba(0,0,0,.05)
+  body { margin:0; font-family:Arial; background:#f6f9ff; color:${textColor}; }
+  header { text-align:center; padding:20px; background:white; border-bottom:3px solid ${accent}; }
+  header img { width:120px; }
+  .tagline { color:${accent}; font-size:18px; margin-top:6px }
+  .hero { width:100%; max-height:320px; object-fit:cover }
+
+  .container { max-width:880px; margin:auto; padding:20px }
+  h2 { color:${accent}; }
+
+  .service-card {
+    background:white;
+    border-radius:12px;
+    padding:18px;
+    display:flex;
+    gap:18px;
+    border:1px solid #e8efff;
+    box-shadow:0 2px 6px rgba(0,0,0,0.06);
+    margin-bottom:18px;
   }
-  .container{ max-width:900px;margin:auto; }
-  .hero{
-    padding:40px;background:#f4f6f9;
+
+  .s-info h3 { margin:0; font-size:22px }
+  .price { font-weight:bold; margin:6px 0; font-size:18px }
+  .desc { margin:0 }
+
+  .s-icon { min-width:60px; display:flex; align-items:center; }
+
+  .buttons { margin-top:12px; display:flex; gap:10px; flex-wrap:wrap }
+  .btn {
+    padding:10px 14px;
+    border-radius:8px;
+    text-decoration:none;
+    color:white;
+    font-weight:bold;
+    display:inline-block;
+  }
+  .btn.consult { background:#25D366; }
+  .btn.reserve { background:${accent}; }
+
+  .box {
+    background:white;
+    padding:18px;
+    border-radius:10px;
+    border:1px solid #e8efff;
+    margin-top:20px;
+  }
+
+  footer {
+    text-align:center;
+    padding:20px;
+    color:#546;
+    margin-top:20px;
   }
 </style>
-</head>
 
+</head>
 <body>
 
 <header>
-  <div class="container">
-    <h1>${state.labName}</h1>
-    <p>${state.tagline}</p>
-  </div>
+  ${logoData ? `<img src="${logoData}">` : ""}
+  <h1>${escapeHtml(labName)}</h1>
+  <div class="tagline">${escapeHtml(tagline)}</div>
 </header>
 
-<section class="hero">
-  <div class="container">
-    ${ state.heroImage ? `<img src="${state.heroImage}" style="width:100%;border-radius:10px">` : "" }
-  </div>
-</section>
+${heroImage ? `<img class="hero" src="${heroImage}">` : ""}
 
-${sectionsHTML}
+<div class="container">
 
-<footer style="padding:40px;text-align:center;color:#555">
-  © ${new Date().getFullYear()} ${state.labName}
-</footer>
+  <h2>Servicios</h2>
+  ${serviceCards}
+
+  ${sectionsHtml}
+
+</div>
+
+<footer>© ${new Date().getFullYear()} ${escapeHtml(labName)} — Todos los derechos reservados.</footer>
 
 </body>
 </html>
   `;
 }
 
-/* ==========================================================
-   PREVISUALIZAR
-========================================================== */
-function updatePreview(){
-  const html = generateLandingHTML();
-  const blob = new Blob([html], {type:"text/html"});
-  const url = URL.createObjectURL(blob);
-  previewIframe.src = url;
-  setTimeout(()=>URL.revokeObjectURL(url),5000);
+
+/* ===========================================================
+   PREVIEW
+   =========================================================== */
+
+function updatePreview() {
+  const doc = previewIframe.contentDocument;
+  doc.open();
+  doc.write(generateFinalHtml());
+  doc.close();
 }
 
-/* ==========================================================
-   EXPORTAR
-========================================================== */
-el("downloadBtn").onclick = ()=>{
-  const html = generateLandingHTML();
-  const blob = new Blob([html], {type:"text/html"});
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = state.labName.replace(/\s+/g,"_")+".html";
-  link.click();
-};
 
-el("openNewTabBtn").onclick = ()=>{
-  const html = generateLandingHTML();
-  const blob = new Blob([html], {type:"text/html"});
+/* ===========================================================
+   DESCARGAR HTML
+   =========================================================== */
+
+downloadBtn.addEventListener("click", () => {
+  const html = generateFinalHtml();
+  const blob = new Blob([html], { type: "text/html" });
   const url = URL.createObjectURL(blob);
-  window.open(url,"_blank");
-};
 
-/* ==========================================================
-   INICIALIZAR
-========================================================== */
-renderSections();
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "landing.html";
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+
+/* ===========================================================
+   ABRIR EN NUEVA PESTAÑA
+   =========================================================== */
+
+openNewTabBtn.addEventListener("click", () => {
+  const html = generateFinalHtml();
+  const win = window.open();
+  win.document.open();
+  win.document.write(html);
+  win.document.close();
+});
+
+/* Inicializar */
+renderServices();
+renderSectionsControls();
 updatePreview();
+
 </script>
 
 </body>
 </html>
-
