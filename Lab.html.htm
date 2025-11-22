@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Generador de páginas para Laboratoristas</title>
+  <style>
+    :root{
+      --accent:#0077c2;
+      --bg:#ffffff;
+      --text:#222;
+      --muted:#666;
+      --card:#f7f9fc;
+      --brand-font: "Helvetica Neue", Arial, sans-serif;
+    }
+    body{
+      margin:0;
+      font-family:var(--brand-font);
+      background:linear-gradient(180deg,#f1f4f8,white);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+    }
+    header.appbar{
+      display:flex;
+      gap:16px;
+      align-items:center;
+      padding:18px 24px;
+      background:rgba(255,255,255,0.9);
+      box-shadow:0 2px 6px rgba(20,30,50,0.06);
+      position:sticky;
+      top:0;
+      z-index:10;
+    }
+    .logo-preview{
+      width:48px;height:48px;border-radius:8px;background:var(--card);
+      display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--muted);
+      overflow:hidden;
+    }
+    .app-title{font-weight:700;font-size:18px}
+    main{display:grid;grid-template-columns:420px 1fr;gap:20px;padding:20px;max-width:1200px;margin:18px auto;width:calc(100% - 48px);}
+    .panel{background:white;padding:16px;border-radius:10px;box-shadow:0 6px 20px rgba(30,40,60,0.06);overflow:auto;max-height:75vh}
+    .panel h2{margin:0 0 12px 0;font-size:16px}
+    label{display:block;margin:8px 0 6px 0;font-size:13px;color:var(--muted)}
+    input[type="text"], input[type="color"], textarea, select{
+      width:100%;padding:8px;border-radius:8px;border:1px solid #e5edf5;background:#fff;box-sizing:border-box;font-size:14px;
+    }
+    textarea{min-height:70px;resize:vertical}
+    .row{display:flex;gap:10px}
+    .btn{appearance:none;border:0;padding:10px 12px;border-radius:8px;background:var(--accent);color:white;cursor:pointer;font-weight:600}
+    .btn.secondary{background:#f1f3f5;color:var(--text)}
+    .sections-list{margin-top:8px;display:flex;flex-direction:column;gap:10px}
+    .section-item{padding:8px;border-radius:8px;border:1px dashed #e6eef8;background:linear-gradient(180deg,#fff,#fbfdff)}
+    .section-item .controls{display:flex;gap:8px;align-items:center;margin-top:8px}
+    .preview-wrap{display:flex;flex-direction:column;gap:10px;height:75vh}
+    iframe#preview{flex:1;border-radius:10px;border:1px solid #e2e8f0;background:white}
+    .actions{display:flex;gap:8px;flex-wrap:wrap}
+    .small{font-size:12px;color:var(--muted)}
+    .help{font-size:13px;color:var(--muted);margin-top:8px}
+    footer.credits{padding:12px;text-align:center;color:var(--muted);font-size:13px}
+    /* --- Styles for generated page (preview) - small helper, the real page gets inline CSS in export --- */
+    .hint{font-size:13px;color:#4b5563}
+    .color-swatch{display:inline-block;width:18px;height:18px;border-radius:4px;border:1px solid rgba(0,0,0,0.06);vertical-align:middle;margin-left:6px}
+  </style>
+</head>
+<body>
+  <header class="appbar">
+    <div class="logo-preview" id="appLogo">LAB</div>
+    <div>
+      <div class="app-title">Generador de Páginas — Laboratoristas</div>
+      <div class="small">Plantillas replicables — cambia pocas cosas y listo</div>
+    </div>
+  </header>
+
+  <main>
+    <!-- LEFT: controls -->
+    <section class="panel" aria-label="Controles">
+      <h2>Configuración básica</h2>
+
+      <label for="labName">Nombre del laboratorio</label>
+      <input id="labName" type="text" value="Laboratorio Clínico San José" />
+
+      <label for="tagline">Tagline / Descripción corta</label>
+      <input id="tagline" type="text" value="Diagnóstico confiable | Resultados rápidos" />
+
+      <div class="row" style="margin-top:8px">
+        <div style="flex:1">
+          <label for="accent">Color principal</label>
+          <input id="accent" type="color" value="#0077c2" />
+        </div>
+        <div style="flex:1">
+          <label for="textColor">Color de texto</label>
+          <input id="textColor" type="color" value="#222222" />
+        </div>
+      </div>
+
+      <label for="logoFile">Logo (PNG/JPG, opcional)</label>
+      <input id="logoFile" type="file" accept="image/*" />
+
+      <label for="heroImageUrl">URL de imagen de cabecera (opcional)</label>
+      <input id="heroImageUrl" type="text" placeholder="https://..." />
+
+      <div style="height:8px"></div>
+
+      <h2>Secciones (editable)</h2>
+      <div class="sections-list" id="sectionsList">
+        <!-- se renderizan automáticamente -->
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:10px">
+        <button class="btn" id="addSectionBtn">+ Añadir sección</button>
+        <button class="btn secondary" id="resetSectionsBtn">Restablecer plantilla</button>
+      </div>
+
+      <div style="height:8px"></div>
+      <h2>Exportar / Previsualizar</h2>
+      <div class="actions">
+        <button class="btn" id="generateBtn">Generar HTML</button>
+        <button class="btn secondary" id="downloadBtn">Descargar .html</button>
+        <button class="btn secondary" id="openNewTabBtn">Abrir en nueva pestaña</button>
+      </div>
+      <div class="help">
+        Tip: usa "Añadir sección" para crear apartados (p. ej. Servicios, Equipos, Personal, Contacto). Cada sección tiene editor inline. ✨
+      </div>
+    </section>
+
+    <!-- RIGHT: preview -->
+    <section class="panel preview-wrap" aria-label="Previsualización">
+      <h2>Previsualización</h2>
+      <iframe id="preview" title="Vista previa"></iframe>
+      <div class="small">Ediciones en la izquierda se reflejan en la previsualización. Puedes descargar el HTML final y subirlo a tu hosting.</div>
+    </section>
+  </main>
+
+  <footer class="credits">Hecho para laboratoristas — cambia textos, colores e imágenes ☑️</footer>
+
+  <script>
+  /* -----------------------------------------------------------
+     Generador de páginas para laboratoristas
+     - Un solo archivo: modifica los valores por defecto para replicar
+     - Funcionalidades:
+       * Añadir/editar/eliminar secciones
+       * Subir logo (data URL) y usar como branding
+       * Cambiar colores y hero image
+       * Vista previa en iframe
+       * Generar y descargar archivo HTML completo
+     ----------------------------------------------------------- */
+
+  // --- Datos iniciales (cambiar aquí si quieres una plantilla diferente) ---
+  const defaultConfig = {
+    labName: "Laboratorio Clínico San José",
+    tagline: "Diagnóstico confiable | Resultados rápidos",
+    accent: "#0077c2",
+    textColor: "#222222",
+    logoData: null, // si quieres pre-incluir logo: dataURL string
+    heroImage: "",  // URL opcional
+    sections: [
+      { id: idGen(), title: "Sobre nosotros", content: "<p>Somos un laboratorio dedicado al diagnóstico clínico con más de 15 años de experiencia. Calidad y rapidez en cada resultado.</p>" },
+      { id: idGen(), title: "Servicios", content: "<ul><li>Hematología</li><li>Bioquímica</li><li>Microbiología</li><li>Pruebas especiales</li></ul>" },
+      { id: idGen(), title: "Equipos y tecnología", content: "<p>Contamos con equipamiento de última generación: analizadores automatizados, sistemas PCR y más.</p>" },
+      { id: idGen(), title: "Contacto", content: "<p>Dirección: Av. Siempre Viva 123<br/>Tel: +41 123 456 789<br/>Email: info@laboratoriosjose.example</p>" }
+    ]
+  };
+
+  // --- Helpers y estado ---
+  const state = JSON.parse(JSON.stringify(defaultConfig)); // copia profunda
+  const el = (id)=>document.getElementById(id);
+
+  // ID generator simple
+  function idGen(){ return 's-'+Math.random().toString(36).slice(2,9); }
+
+  // --- UI elements ---
+  const logoBox = el('appLogo');
+  const labNameInput = el('labName');
+  const taglineInput = el('tagline');
+  const accentInput = el('accent');
+  const textColorInput = el('textColor');
+  const logoFileInput = el('logoFile');
+  const heroImageInput = el('heroImageUrl');
+  const sectionsList = el('sectionsList');
+  const addSectionBtn = el('addSectionBtn');
+  const resetSectionsBtn = el('resetSectionsBtn');
+  const generateBtn = el('generateBtn');
+  const downloadBtn = el('downloadBtn');
+  const openNewTabBtn = el('openNewTabBtn');
+  const previewIframe = el('preview');
+
+  // --- Init UI values ---
+  labNameInput.value = state.labName;
+  taglineInput.value = state.tagline;
+  accentInput.value = state.accent;
+  textColorInput.value = state.textColor;
+  heroImageInput.value = state.heroImage || "";
+
+  // If default logo provided, render
+  if(state.logoData){
+    logoBox.style.backgroundImage = `url(${state.logoData})`;
+    logoBox.textContent = '';
+  } else {
+    logoBox.textContent = "LAB";
+  }
+
+  // Render sections controls
+  function renderSectionsControls(){
+    sectionsList.innerHTML = '';
+    state.sections.forEach((s, idx) => {
+      const item = document.createElement('div');
+      item.className = 'section-item';
+      item.dataset.id = s.id;
+      item.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <strong contenteditable="false" class="s-title">${escapeHtml(s.title)}</strong>
+          <div style="display:flex;gap:6px">
+            <button class="btn small editBtn" data-id="${s.id}" style="padding:6px 8px;font-size:13px">Editar</button>
+            <button class="btn secondary small delBtn" data-id="${s.id}" style="padding:6px 8px;font-size:13px">Eliminar</button>
+          </div>
+        </div>
+        <div style="margin-top:8px">
+          <div class="s-content" style="min-height:60px;padding:8px;border-radius:6px;border:1px solid #eef6ff;background:#fff" contenteditable="true">${s.content}</div>
+          <div class="controls">
+            <input type="text" class="s-title-input" placeholder="Título de sección" value="${escapeAttr(s.title)}" style="flex:1"/>
+            <button class="btn saveBtn small" data-id="${s.id}" style="padding:6px 8px">Guardar</button>
+            <button class="btn secondary small upBtn" data-id="${s.id}" style="padding:6px 8px">↑</button>
+            <button class="btn secondary small downBtn" data-id="${s.id}" style="padding:6px 8px">↓</button>
+          </div>
+        </div>
+      `;
+      sectionsList.appendChild(item);
+      // Attach events for contenteditable save etc. Done below in delegated handler.
+    });
+  }
+
+  // Delegated handlers for sections
+  sectionsList.addEventListener('click', (ev)=>{
+    const t = ev.target;
+    if(t.classList.contains('delBtn')){
+      const id = t.dataset.id;
+      state.sections = state.sections.filter(s=>s.id!==id);
+      renderSectionsControls(); updatePreview();
+    } else if(t.classList.contains('saveBtn')){
+      const id = t.dataset.id;
+      const parent = t.closest('.section-item');
+      const titleVal = parent.querySelector('.s-title-input').value.trim() || 'Sección';
+      const contentHtml = parent.querySelector('.s-content').innerHTML;
+      const s = state.sections.find(x=>x.id===id);
+      if(s){ s.title = titleVal; s.content = contentHtml; }
+      renderSectionsControls(); updatePreview();
+    } else if(t.classList.contains('upBtn')){
+      const id = t.dataset.id;
+      const i = state.sections.findIndex(s=>s.id===id);
+      if(i>0){ [state.sections[i-1], state.sections[i]] = [state.sections[i], state.sections[i-1]]; renderSectionsControls(); updatePreview(); }
+    } else if(t.classList.contains('downBtn')){
+      const id = t.dataset.id;
+      const i = state.sections.findIndex(s=>s.id===id);
+      if(i >= 0 && i < state.sections.length-1){ [state.sections[i+1], state.sections[i]] = [state.sections[i], state.sections[i+1]]; renderSectionsControls(); updatePreview(); }
+    } else if(t.classList.contains('editBtn')){
+      // focus the contenteditable field
+      const parent = t.closest('.section-item');
+      const content = parent.querySelector('.s-content');
+      content.focus();
+      // place caret at end
+      placeCaretAtEnd(content);
+    }
+  });
+
+  // Add section
+  addSectionBtn.addEventListener('click', ()=>{
+    const newSec = { id: idGen(), title: "Nueva sección", content: "<p>Contenido de la sección...</p>" };
+    state.sections.push(newSec);
+    renderSectionsControls();
+    updatePreview();
+  });
+
+  resetSectionsBtn.addEventListener('click', ()=>{
+    if(!confirm("¿Restablecer a la plantilla por defecto? Se perderán cambios actuales.")) return;
+    Object.assign(state, JSON.parse(JSON.stringify(defaultConfig)));
+    // reapply inputs
+    labNameInput.value = state.labName;
+    taglineInput.value = state.tagline;
+    accentInput.value = state.accent;
+    textColorInput.value = state.textColor;
+    heroImageInput.value = state.heroImage || "";
+    if(state.logoData){ logoBox.style.backgroundImage = `url(${state.logoData})`; logoBox.textContent=''; } else { logoBox.style.backgroundImage=''; logoBox.textContent='LAB'; }
+    renderSectionsControls(); updatePreview();
+  });
+
+  // Inputs change -> update state and preview
+  [labNameInput, taglineInput, accentInput, textColorInput, heroImageInput].forEach(inp=>{
+    inp.addEventListener('input', ()=>{
+      state.labName = labNameInput.value;
+      state.tagline = taglineInput.value;
+      state.accent = accentInput.value;
+      state.textColor = textColorInput.value;
+      state.heroImage = heroImageInput.value;
+      // update header logo text color and brand accent
+      document.documentElement.style.setProperty('--accent', state.accent);
+      document.documentElement.style.setProperty('--text', state.textColor);
+      renderHeaderLogo();
+      updatePreview();
+    });
+  });
+
+  // Logo upload -> read as dataURL
+  logoFileInput.addEventListener('change', (e)=>{
+    const f = e.target.files[0];
+    if(!f) return;
+    const reader = new FileReader();
+    reader.onload = (ev)=>{
+      state.logoData = ev.target.result;
+      renderHeaderLogo();
+      updatePreview();
+    };
+    reader.readAsDataURL(f);
+  });
+
+  function renderHeaderLogo(){
+    if(state.logoData){
+      logoBox.style.backgroundImage = `url(${state.logoData})`;
+      logoBox.style.backgroundSize = 'cover';
+      logoBox.style.backgroundPosition = 'center';
+      logoBox.textContent = '';
+    } else {
+      logoBox.style.backgroundImage = '';
+      logoBox.textContent = state.labName ? state.labName.split(' ').map(w=>w[0]).slice(0,2).join('') : 'LAB';
+    }
+  }
+
+  // --- Generate HTML for export / preview ---
+  function generateFullHTML(){
+    // Build sections HTML
+    const sectionsHtml = state.sections.map(s=>{
+      return `<section class="site-section" id="${s.id}">
+        <div class="container">
+          <h2 class="section-title">${escapeHtml(s.title)}</h2>
+          <div class="section-body">${s.content}</div>
+        </div>
+      </section>`;
+    }).join('\n');
+
+    // Inline CSS for the generated page. Keep minimal but aesthetic.
+    const pageCss = `
+      :root{ --accent: ${state.accent}; --text: ${state.textColor}; --muted:#6b7280; --bg:#fff; }
+      *{box-sizing:border-box}
+      body{font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial; margin:0;color:var(--text); background:linear-gradient(180deg,#f7fbff,#ffffff);}
+      .topbar{display:flex;justify-content:space-between;align-items:center;padding:18px 24px;background:rgba(255,255,255,0.95);box-shadow:0 2px 8px rgba(16,24,40,0.06);}
+      .brand{display:flex;align-items:center;gap:14px}
+      .brand .logo{width:56px;height:56px;border-radius:10px;background:#f3f6fb;display:flex;align-items:center;justify-content:center;overflow:hidden}
+      .brand .name{font-weight:700;font-size:18px}
+      .hero{display:flex;gap:18px;align-items:center;padding:36px 24px;background:linear-gradient(90deg, rgba(0,0,0,0.03), rgba(255,255,255,0));}
+      .hero .hero-text{flex:1}
+      .hero .hero-title{font-size:26px;margin:0 0 6px 0}
+      .hero .hero-sub{color:var(--muted);margin:0}
+      .hero .hero-image{width:220px;height:140px;border-radius:10px;background:#e9f2fb;background-size:cover;background-position:center}
+      .container{max-width:980px;margin:0 auto;padding:20px}
+      .site-section{padding:22px 0;border-top:1px solid rgba(15,23,42,0.03)}
+      .section-title{margin:0 0 12px 0;font-size:20px;color:var(--accent)}
+      .section-body p{color:var(--text);line-height:1.5}
+      .footer{padding:18px 24px;background:#f8fafc;border-top:1px solid rgba(15,23,42,0.03);color:var(--muted);font-size:14px}
+      .contact-card{background:linear-gradient(180deg,#fff,#fbfdff);padding:14px;border-radius:8px;border:1px solid rgba(0,0,0,0.04)}
+      @media (max-width:720px){ .hero{flex-direction:column;align-items:flex-start} .hero .hero-image{width:100%;height:160px} }
+    `;
+
+    // Logo HTML (if dataURL present)
+    const logoHtml = state.logoData ? `<img src="${state.logoData}" alt="${escapeHtml(state.labName)}" style="width:56px;height:56px;object-fit:cover;border-radius:10px">`
+                                    : `<div style="width:56px;height:56px;border-radius:10px;background:linear-gradient(180deg,#f3f6fb,#e9f2fb);display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--muted)">${escapeHtml(initials(state.labName))}</div>`;
+
+    // Hero image style
+    const heroStyle = state.heroImage ? `style="background-image:url('${state.heroImage}');"` : '';
+
+    // Build final HTML
+    const html = `<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>${escapeHtml(state.labName)}</title>
+<style>${pageCss}</style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">${logoHtml}</div>
+      <div>
+        <div class="name">${escapeHtml(state.labName)}</div>
+        <div class="small" style="color:var(--muted);font-size:13px">${escapeHtml(state.tagline)}</div>
+      </div>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-text container">
+      <h1 class="hero-title">${escapeHtml(state.labName)}</h1>
+      <p class="hero-sub">${escapeHtml(state.tagline)}</p>
+    </div>
+    <div class="hero-image" ${heroStyle}></div>
+  </section>
+
+  ${sectionsHtml}
+
+  <footer class="footer">
+    <div class="container">
+      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px">
+        <div>
+          <strong>${escapeHtml(state.labName)}</strong><br/>
+          <span style="color:var(--muted)">Dirección • Teléfono • Email</span>
+        </div>
+        <div style="min-width:200px;text-align:right;color:var(--muted)">© ${new Date().getFullYear()} ${escapeHtml(state.labName)} — Todos los derechos reservados</div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>`;
+
+    return html;
+  }
+
+  // Update preview iframe
+  function updatePreview(){
+    const doc = previewIframe.contentWindow || previewIframe.contentDocument;
+    const html = generateFullHTML();
+    const blob = new Blob([html], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    previewIframe.src = url;
+    // revoke url after load to free memory
+    previewIframe.onload = ()=> setTimeout(()=> URL.revokeObjectURL(url), 5000);
+  }
+
+  // Download the HTML file
+  downloadBtn.addEventListener('click', ()=>{
+    const html = generateFullHTML();
+    const blob = new Blob([html], { type: 'text/html' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = (state.labName.replace(/\s+/g,'_').toLowerCase() || 'laboratorio') + '.html';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 2000);
+  });
+
+  // Generate button copies latest html to clipboard (optional) and updates preview
+  generateBtn.addEventListener('click', async ()=>{
+    updatePreview();
+    // Try to copy a small summary to clipboard (not the whole html by default)
+    try{
+      await navigator.clipboard.writeText(`Página generada: ${state.labName} — previsualiza y descarga.`);
+      alert('Vista previa actualizada. Un mensaje breve fue copiado al portapapeles.');
+    }catch(e){
+      alert('Vista previa actualizada.');
+    }
+  });
+
+  // Open in new tab
+  openNewTabBtn.addEventListener('click', ()=>{
+    const html = generateFullHTML();
+    const blob = new Blob([html], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank');
+    // revoke later
+    setTimeout(()=> URL.revokeObjectURL(url), 6000);
+  });
+
+  // Initial render
+  renderSectionsControls();
+  renderHeaderLogo();
+  updatePreview();
+
+  // --- Utility helpers ---
+  function escapeHtml(str){
+    if(typeof str !== 'string') return '';
+    return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+  function escapeAttr(str){ return String(str).replace(/"/g,'&quot;'); }
+  function initials(name){
+    if(!name) return 'LAB';
+    return name.split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+  }
+
+  // Place caret at end for contenteditable
+  function placeCaretAtEnd(el){
+    el.focus();
+    if(typeof window.getSelection != "undefined"
+        && typeof document.createRange != "undefined") {
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      range.collapse(false);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    }
+  }
+
+  // Small escaping for innerHTML insert in controls - keep minimal
+  // (we used escapeAttr / escapeHtml earlier)
+
+  // Ensure preview updates when iframe size or external inputs change (optional)
+  window.addEventListener('resize', ()=> {/* no-op for now */});
+
+  </script>
+</body>
+</html>
