@@ -5,25 +5,56 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Bios Lab Laboratorio de Análisis Clínicos</title>
 <meta name="description" content="Diagnóstico confiable | Resultados rápidos">
+
 <style>
-:root { --accent:#0077c2; --text:#222222; }
-* { box-sizing:border-box; }
+/* ---------------------------------------
+   🔥 FIX GLOBAL PARA GITHUB PAGES / JEKYLL
+--------------------------------------- */
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+main, .page-content, .wrapper, .container-lg,
+.page-header, header, footer {
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ---------------------------------------
+   🎨 ESTILOS DEL SITIO (TU DISEÑO REAL)
+--------------------------------------- */
+:root {
+  --accent:#0077c2;
+  --text:#222222;
+}
+* { box-sizing: border-box; }
+
 body {
   font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial;
   margin:0;
   color:var(--text);
   background:linear-gradient(180deg,#fafcff,#ffffff);
 }
+
+/* HEADER */
 .topbar {
   padding:18px;
   background:white;
   box-shadow:0 2px 8px rgba(16,24,40,0.04);
 }
+
 .container {
   max-width:1100px;
   margin:0 auto;
   padding:20px;
 }
+
+/* HERO */
 .hero {
   display:flex;
   gap:18px;
@@ -31,17 +62,21 @@ body {
   padding:34px 20px;
   background:linear-gradient(90deg, rgba(0,0,0,0.02), rgba(255,255,255,0));
 }
+
 .hero .left { flex:1; }
-.hero .title { font-size:28px; margin:0; color:var(--accent); }
+.hero .title { font-size:32px; margin:0; color:var(--accent); font-weight:700; }
 .hero .subtitle { color:#6b7280; margin-top:6px; }
+
 .hero .image {
-  width:260px;
-  height:150px;
-  border-radius:10px;
-  background:#eef6ff;
+  width:300px;
+  height:180px;
+  border-radius:12px;
   background-size:cover;
   background-position:center;
+  flex-shrink:0;
 }
+
+/* SERVICIOS */
 .service-card {
   background:white;
   border-radius:12px;
@@ -52,9 +87,8 @@ body {
   box-shadow:0 2px 6px rgba(0,0,0,0.06);
   margin-bottom:18px;
 }
-.s-info h3 { margin:0; }
-.price { font-weight:bold; margin:6px 0; font-size:18px; }
-.s-icon { min-width:60px; display:flex; align-items:center; }
+
+/* BOTONES */
 .service-btns a {
   padding:10px 14px;
   border-radius:8px;
@@ -64,22 +98,19 @@ body {
   margin-right:8px;
   display:inline-block;
 }
-.box {
-  background:white;
-  padding:18px;
-  border-radius:10px;
-  border:1px solid #e8efff;
-  margin-top:20px;
-}
+
+/* FOOTER */
 footer {
   padding:28px 0;
   text-align:center;
   color:#6b7280;
   margin-top:20px;
 }
+
+/* RESPONSIVE */
 @media (max-width:820px) {
-  .hero { flex-direction:column; align-items:flex-start; }
-  .hero .image { width:100%; height:160px; }
+  .hero { flex-direction:column; align-items:flex-start; text-align:left; }
+  .hero .image { width:100%; height:200px; }
   .container { padding:14px; }
 }
 </style>
@@ -87,6 +118,7 @@ footer {
 
 <body>
 
+<!-- HEADER -->
 <header class="topbar">
   <div class="container">
     <h1 style="margin:0; color:var(--accent); font-size:22px;">
@@ -95,21 +127,22 @@ footer {
   </div>
 </header>
 
+<!-- HERO -->
 <section class="hero">
   <div class="left">
     <h2 class="title">Diagnóstico confiable</h2>
     <p class="subtitle">Resultados rápidos y precisos para tu salud.</p>
   </div>
 
-  <div class="image"
-       style="background-image:url('https://www.chevrolet.com.mx/content/dam/chevrolet/na/mx/es/index/cars/01-images/2026/2026-aveo-sedan-2000x1000.png?imwidth=960');">
-  </div>
+  <div class="image" style="
+    background-image:url('https://www.chevrolet.com.mx/content/dam/chevrolet/na/mx/es/index/cars/01-images/2026/2026-aveo-sedan-2000x1000.png?imwidth=960');
+  "></div>
 </section>
 
 <!-- SOBRE NOSOTROS -->
 <section style="padding:34px 18px; border-top:1px solid rgba(0,0,0,0.03);">
   <div class="container">
-    <h2 style="color:#0077c2; margin:0 0 12px 0; font-size:20px;">Sobre nosotros</h2>
+    <h2 style="color:#0077c2; margin:0 0 12px; font-size:22px;">Sobre nosotros</h2>
     <p>Somos un laboratorio clínico con más de 15 años de experiencia.</p>
   </div>
 </section>
@@ -118,20 +151,24 @@ footer {
 <section style="padding:34px 18px; border-top:1px solid rgba(0,0,0,0.03);">
   <div class="container">
 
-    <h2 style="color:#0077c2; margin:0 0 12px; font-size:20px;">Servicios</h2>
+    <h2 style="color:#0077c2; margin:0 0 12px; font-size:22px;">Servicios</h2>
     <p>Descripción general de los servicios. Agrega tarjetas de servicios desde el panel.</p>
 
     <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(240px,1fr)); gap:14px; margin-top:18px;">
 
       <!-- SERVICIO 1 -->
       <article class="service-card">
-        <div style="width:64px;height:64px;border-radius:8px;background:#f3f6fb;display:flex;align-items:center;justify-content:center;font-size:28px;">🧬</div>
+        <div style="
+          width:64px;height:64px;border-radius:8px;
+          background:#f3f6fb;display:flex;align-items:center;
+          justify-content:center;font-size:28px;">🧬
+        </div>
         <div style="flex:1">
-          <div style="display:flex;align-items:center;gap:8px;">
+          <div style="display:flex; align-items:center; gap:8px;">
             <div style="font-weight:700;">Prueba PCR</div>
             <div style="margin-left:auto; color:#0077c2; font-weight:700;">$900</div>
           </div>
-          <div style="color:#444;margin-top:8px;">Resultado en 24-48 horas</div>
+          <div style="color:#444; margin-top:8px;">Resultado en 24-48 horas</div>
           <div class="service-btns" style="margin-top:12px;">
             <a href="https://wa.me/5214151671705?text=Hola%2C%20quiero%20información%20sobre%3A%20Prueba%20PCR" target="_blank" style="background:#25D366;">💬 Consultar</a>
             <a href="https://wa.me/5214151671705?text=Hola%2C%20quiero%20agendar%20una%20cita%20para%3A%20Prueba%20PCR%20(%24900)" target="_blank" style="background:#0077c2;">📅 Reservar</a>
@@ -143,11 +180,11 @@ footer {
       <article class="service-card">
         <div style="width:64px;height:64px;border-radius:8px;background:#f3f6fb;display:flex;align-items:center;justify-content:center;font-size:28px;">🩺</div>
         <div style="flex:1">
-          <div style="display:flex;align-items:center;gap:8px;">
+          <div style="display:flex; align-items:center; gap:8px;">
             <div style="font-weight:700;">Biometría Hemática</div>
             <div style="margin-left:auto; color:#0077c2; font-weight:700;">$180</div>
           </div>
-          <div style="color:#444;margin-top:8px;">Estudio general</div>
+          <div style="color:#444; margin-top:8px;">Estudio general</div>
           <div class="service-btns" style="margin-top:12px;">
             <a href="https://wa.me/5214151671705?text=Hola%2C%20quiero%20información%20sobre%3A%20Biometría%20Hemática" target="_blank" style="background:#25D366;">💬 Consultar</a>
             <a href="https://wa.me/5214151671705?text=Hola%2C%20quiero%20agendar%20una%20cita%20para%3A%20Biometría%20Hemática%20(%24180)" target="_blank" style="background:#0077c2;">📅 Reservar</a>
@@ -159,11 +196,11 @@ footer {
       <article class="service-card">
         <div style="width:64px;height:64px;border-radius:8px;background:#f3f6fb;display:flex;align-items:center;justify-content:center;font-size:28px;">🔬</div>
         <div style="flex:1">
-          <div style="display:flex;align-items:center;gap:8px;">
+          <div style="display:flex; align-items:center; gap:8px;">
             <div style="font-weight:700;">Recolección 24 horas</div>
             <div style="margin-left:auto; color:#0077c2; font-weight:700;">$500</div>
           </div>
-          <div style="color:#444;margin-top:8px;">Estudio donde se recolecta la orina de 24 horas.</div>
+          <div style="color:#444; margin-top:8px;">Estudio donde se recolecta la orina de 24 horas.</div>
           <div class="service-btns" style="margin-top:12px;">
             <a href="https://wa.me/5214151671705?text=Hola%2C%20quiero%20información%20sobre%3A%20Recolección%2024%20horas" target="_blank" style="background:#25D366;">💬 Consultar</a>
             <a href="https://wa.me/5214151671705?text=Hola%2C%20quiero%20agendar%20una%20cita%20para%3A%20Recolección%2024%20horas%20(%24500)" target="_blank" style="background:#0077c2;">📅 Reservar</a>
@@ -178,7 +215,7 @@ footer {
 <!-- CONTACTO -->
 <section style="padding:34px 18px; border-top:1px solid rgba(0,0,0,0.03);">
   <div class="container">
-    <h2 style="color:#0077c2; margin:0 0 12px; font-size:20px;">Contacto</h2>
+    <h2 style="color:#0077c2; margin:0 0 12px; font-size:22px;">Contacto</h2>
     <p>
       Dirección: Av. Siempre Viva 123<br>
       Email: info@laboratorio.com
