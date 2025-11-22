@@ -1,0 +1,461 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Generador — Laboratorios (Servicios + WhatsApp)</title>
+<style>
+:root{ --accent:#0077c2; --text:#222; --muted:#666; --card:#f7f9fc; --brand-font: "Helvetica Neue", Arial, sans-serif; }
+*{box-sizing:border-box}
+body{ margin:0; font-family:var(--brand-font); background:linear-gradient(180deg,#f1f4f8,white); color:var(--text); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale; }
+header.appbar{ display:flex; gap:16px; align-items:center; padding:18px 24px; background:rgba(255,255,255,0.95); box-shadow:0 2px 6px rgba(20,30,50,0.06); position:sticky; top:0; z-index:10; }
+.logo-preview{ width:48px; height:48px; border-radius:8px; background:var(--card); display:flex; align-items:center; justify-content:center; font-weight:700; color:var(--muted); overflow:hidden; }
+.app-title{ font-weight:700; font-size:18px; }
+main{ display:grid; grid-template-columns:440px 1fr; gap:20px; padding:20px; max-width:1200px; margin:18px auto; width:calc(100% - 48px); }
+.panel{ background:white; padding:16px; border-radius:10px; box-shadow:0 6px 20px rgba(30,40,60,0.06); overflow:auto; max-height:78vh; }
+.panel h2{ margin:0 0 12px 0; font-size:16px; }
+label{ display:block; margin:8px 0 6px 0; font-size:13px; color:var(--muted); }
+input[type="text"], input[type="color"], input[type="file"], textarea, select{ width:100%; padding:8px; border-radius:8px; border:1px solid #e5edf5; background:#fff; font-size:14px; }
+textarea{ min-height:70px; resize:vertical; }
+.row{ display:flex; gap:10px; }
+.btn{ appearance:none; border:0; padding:10px 12px; border-radius:8px; background:var(--accent); color:white; cursor:pointer; font-weight:600; }
+.btn.secondary{ background:#f1f3f5; color:var(--text); }
+.small{ font-size:12px; color:var(--muted); }
+.sections-list{ margin-top:8px; display:flex; flex-direction:column; gap:10px; }
+.section-item{ padding:8px; border-radius:8px; border:1px dashed #e6eef8; background:linear-gradient(180deg,#fff,#fbfdff); }
+.services-manager{ margin-top:10px; border-top:1px dashed #eef6ff; padding-top:10px; }
+.service-row{ border:1px solid #dfe7f3; padding:10px; border-radius:8px; background:#f9fbff; margin-bottom:8px; }
+.service-row input, .service-row textarea{ margin-top:4px; }
+.service-actions{ display:flex; gap:6px; margin-top:8px; }
+.service-card{ background:white; border-radius:10px; padding:16px; border:1px solid #e3e9f5; box-shadow:0 4px 15px rgba(20,40,80,0.04); margin-bottom:14px; display:flex; gap:12px; align-items:flex-start; }
+.service-title{ font-size:18px; font-weight:700; }
+.service-price{ font-size:17px; color:var(--accent); margin:4px 0 8px 0; font-weight:600; }
+.service-desc{ color:#444; line-height:1.45; margin-bottom:10px; }
+.service-btns{ display:flex; gap:10px; }
+.service-btn{ flex:1; padding:10px; border-radius:8px; color:white; text-align:center; font-weight:700; text-decoration:none; display:block; }
+.btn-wsp{ background:#25d366; }
+.btn-call{ background:#0077c2; }
+.preview-wrap{ display:flex; flex-direction:column; gap:10px; height:78vh; }
+iframe#preview{ flex:1; border-radius:10px; border:1px solid #e2e8f0; background:white; height:100%; width:100%; }
+.muted-note{ font-size:12px; color:var(--muted); margin-top:8px; }
+.icon-preview{ width:40px; height:40px; border-radius:6px; background:#f3f6fb; display:flex; align-items:center; justify-content:center; overflow:hidden; border:1px solid #eef6ff; }
+@media (max-width:980px){ main{ grid-template-columns:1fr; } iframe#preview{ height:420px; } }
+</style>
+</head>
+<body>
+
+<header class="appbar">
+  <div class="logo-preview" id="appLogo">LAB</div>
+  <div>
+    <div class="app-title">Generador de Páginas — Laboratoristas</div>
+    <div class="small">Servicios estructurados + contenido libre — listo para exportar</div>
+  </div>
+</header>
+
+<main>
+  <!-- LEFT PANEL -->
+  <section class="panel" aria-label="Controles">
+    <h2>Configuración básica</h2>
+
+    <label for="labName">Nombre del laboratorio</label>
+    <input id="labName" type="text" value="Laboratorio Clínico San José">
+
+    <label for="tagline">Descripción corta</label>
+    <input id="tagline" type="text" value="Diagnóstico confiable | Resultados rápidos">
+
+    <div class="row" style="margin-top:8px">
+      <div style="flex:1">
+        <label for="accent">Color principal</label>
+        <input id="accent" type="color" value="#0077c2">
+      </div>
+      <div style="flex:1">
+        <label for="textColor">Color del texto</label>
+        <input id="textColor" type="color" value="#222222">
+      </div>
+    </div>
+
+    <label for="phoneNumber" style="margin-top:8px">Teléfono (para Llamar)</label>
+    <input id="phoneNumber" type="text" placeholder="+521000000000">
+
+    <label for="whatsappNumber">WhatsApp (solo dígitos, ejemplo 521XXXXXXXXXX)</label>
+    <input id="whatsappNumber" type="text" placeholder="521000000000">
+
+    <label for="logoFile" style="margin-top:10px">Logo (opcional)</label>
+    <input id="logoFile" type="file" accept="image/*">
+
+    <label for="heroImageUrl">Imagen de cabecera (URL)</label>
+    <input id="heroImageUrl" type="text" placeholder="https://...">
+
+    <h2 style="margin-top:12px">Secciones</h2>
+    <div class="muted-note">La sección titulada <strong>"Servicios"</strong> mostrará además las tarjetas con precios que configures abajo.</div>
+
+    <div class="sections-list" id="sectionsList"></div>
+    <div style="display:flex;gap:8px;margin-top:10px">
+      <button class="btn" id="addSectionBtn">+ Añadir sección</button>
+      <button class="btn secondary" id="resetSectionsBtn">Restaurar plantilla</button>
+    </div>
+
+    <h2 style="margin-top:16px">Panel de Servicios (Opción 2)</h2>
+    <div class="services-manager">
+      <div style="display:flex;gap:8px;margin-bottom:8px;align-items:center">
+        <input id="svcName" type="text" placeholder="Nombre del servicio (ej. Prueba PCR)" />
+        <input id="svcPrice" type="text" placeholder="Precio (ej. $900)" style="width:120px" />
+      </div>
+      <textarea id="svcDesc" placeholder="Descripción breve (opcional)"></textarea>
+      <input id="svcIcon" type="text" placeholder="URL de icono o emoji (opcional) - https://..." style="margin-top:8px"/>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn" id="addServiceBtn">Añadir servicio</button>
+        <button class="btn secondary" id="clearServiceFormBtn">Limpiar</button>
+      </div>
+
+      <div id="servicesList" style="margin-top:12px;display:flex;flex-direction:column;gap:8px"></div>
+    </div>
+
+    <h2 style="margin-top:16px">Exportar / Previsualizar</h2>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn" id="generateBtn">Generar HTML</button>
+      <button class="btn secondary" id="downloadBtn">Descargar .html</button>
+      <button class="btn secondary" id="openNewTabBtn">Abrir previsualización</button>
+    </div>
+
+    <div class="muted-note" style="margin-top:10px">Tip: Asegúrate de tener una sección titulada <strong>Contacto</strong> para que aparezcan los botones globales de Llamar/WhatsApp.</div>
+  </section>
+
+  <!-- RIGHT PREVIEW -->
+  <section class="panel preview-wrap" aria-label="Previsualización">
+    <h2>Previsualización</h2>
+    <iframe id="preview" title="Vista previa"></iframe>
+    <div class="small">Los cambios se reflejan en la vista previa. Descarga el HTML final para publicarlo.</div>
+  </section>
+</main>
+
+<footer class="credits" style="padding:12px;text-align:center;color:var(--muted);font-size:13px">
+  Hecho para laboratoristas — cambia textos, colores e imágenes
+</footer>
+
+<script>
+/* ---------- helpers ---------- */
+function idGen(){ return 'id-'+Math.random().toString(36).slice(2,9); }
+function el(id){ return document.getElementById(id); }
+function escapeHtml(s){ if(typeof s!=='string') return ''; return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* ---------- default state ---------- */
+const defaultConfig = {
+  labName: "Laboratorio Clínico San José",
+  tagline: "Diagnóstico confiable | Resultados rápidos",
+  accent: "#0077c2",
+  textColor: "#222222",
+  logoData: "",
+  heroImage: "",
+  phoneNumber: "",
+  whatsapp: "",
+  sections: [
+    { id: idGen(), title: "Sobre nosotros", content: "<p>Somos un laboratorio clínico con más de 15 años de experiencia.</p>" },
+    { id: idGen(), title: "Servicios", content: "<p>Descripción general de los servicios. Agrega tarjetas de servicios desde el panel.</p>" },
+    { id: idGen(), title: "Contacto", content: "<p>Dirección: Av. Siempre Viva 123<br/>Email: info@laboratorio.com</p>" }
+  ],
+  services: [
+    { id: idGen(), name: "Prueba PCR", price: "$900", desc: "Resultado en 24-48 horas", icon: "🧬" },
+    { id: idGen(), name: "Biometría Hemática", price: "$180", desc: "Estudio general", icon: "🩺" }
+  ]
+};
+
+const state = JSON.parse(JSON.stringify(defaultConfig));
+
+/* ---------- UI refs ---------- */
+const labNameInput = el('labName');
+const taglineInput = el('tagline');
+const accentInput = el('accent');
+const textColorInput = el('textColor');
+const logoFileInput = el('logoFile');
+const heroInput = el('heroImageUrl');
+const phoneInput = el('phoneNumber');
+const whatsappInput = el('whatsappNumber');
+
+const sectionsList = el('sectionsList');
+const addSectionBtn = el('addSectionBtn');
+const resetSectionsBtn = el('resetSectionsBtn');
+
+const svcName = el('svcName');
+const svcPrice = el('svcPrice');
+const svcDesc = el('svcDesc');
+const svcIcon = el('svcIcon');
+const addServiceBtn = el('addServiceBtn');
+const clearServiceFormBtn = el('clearServiceFormBtn');
+const servicesListEl = el('servicesList');
+
+const previewIframe = el('preview');
+const generateBtn = el('generateBtn');
+const downloadBtn = el('downloadBtn');
+const openNewTabBtn = el('openNewTabBtn');
+
+const appLogoEl = el('appLogo');
+
+/* ---------- bind inputs to state (live) ---------- */
+labNameInput.value = state.labName;
+taglineInput.value = state.tagline;
+accentInput.value = state.accent;
+textColorInput.value = state.textColor;
+heroInput.value = state.heroImage || "";
+phoneInput.value = state.phoneNumber || "";
+whatsappInput.value = state.whatsapp || "";
+
+labNameInput.addEventListener('input', ()=>{ state.labName = labNameInput.value; renderHeaderPreview(); updatePreview(); });
+taglineInput.addEventListener('input', ()=>{ state.tagline = taglineInput.value; updatePreview(); });
+accentInput.addEventListener('input', ()=>{ state.accent = accentInput.value; document.documentElement.style.setProperty('--accent', state.accent); updatePreview(); });
+textColorInput.addEventListener('input', ()=>{ state.textColor = textColorInput.value; document.documentElement.style.setProperty('--text', state.textColor); updatePreview(); });
+heroInput.addEventListener('input', ()=>{ state.heroImage = heroInput.value; updatePreview(); });
+phoneInput.addEventListener('input', ()=>{ state.phoneNumber = phoneInput.value; updatePreview(); });
+whatsappInput.addEventListener('input', ()=>{ state.whatsapp = whatsappInput.value.replace(/\D/g,''); updatePreview(); });
+
+logoFileInput.addEventListener('change', e=>{
+  const f = e.target.files[0];
+  if(!f) return;
+  const reader = new FileReader();
+  reader.onload = ev=>{
+    state.logoData = ev.target.result;
+    renderHeaderPreview();
+    updatePreview();
+  };
+  reader.readAsDataURL(f);
+});
+
+/* ---------- sections editor ---------- */
+function renderSectionsControls(){
+  sectionsList.innerHTML = '';
+  state.sections.forEach((sec, idx)=>{
+    const div = document.createElement('div');
+    div.className = 'section-item';
+    div.dataset.id = sec.id;
+    div.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <input class="s-title-input" value="${escapeHtml(sec.title)}" style="flex:1;margin-right:8px"/>
+        <div style="display:flex;gap:6px">
+          <button class="btn saveBtn">Guardar</button>
+          <button class="btn secondary upBtn" ${idx===0? 'disabled':''}>↑</button>
+          <button class="btn secondary downBtn" ${idx===state.sections.length-1? 'disabled':''}>↓</button>
+          <button class="btn secondary delBtn">Eliminar</button>
+        </div>
+      </div>
+      <textarea class="s-content" style="margin-top:8px">${sec.content}</textarea>
+    `;
+    // events
+    div.querySelector('.saveBtn').addEventListener('click', ()=>{
+      sec.title = div.querySelector('.s-title-input').value || 'Sección';
+      sec.content = div.querySelector('.s-content').value || '';
+      renderSectionsControls(); updatePreview();
+    });
+    div.querySelector('.delBtn').addEventListener('click', ()=>{
+      if(!confirm('Eliminar sección?')) return;
+      state.sections = state.sections.filter(s=>s.id!==sec.id);
+      renderSectionsControls(); updatePreview();
+    });
+    div.querySelector('.upBtn').addEventListener('click', ()=>{
+      const i = state.sections.findIndex(s=>s.id===sec.id);
+      if(i>0){ [state.sections[i-1], state.sections[i]] = [state.sections[i], state.sections[i-1]]; renderSectionsControls(); updatePreview(); }
+    });
+    div.querySelector('.downBtn').addEventListener('click', ()=>{
+      const i = state.sections.findIndex(s=>s.id===sec.id);
+      if(i>=0 && i<state.sections.length-1){ [state.sections[i+1], state.sections[i]] = [state.sections[i], state.sections[i+1]]; renderSectionsControls(); updatePreview(); }
+    });
+    sectionsList.appendChild(div);
+  });
+}
+addSectionBtn.addEventListener('click', ()=>{
+  state.sections.push({ id: idGen(), title: 'Nueva sección', content: '<p>Contenido...</p>' });
+  renderSectionsControls(); updatePreview();
+});
+resetSectionsBtn.addEventListener('click', ()=>{
+  if(!confirm('Restablecer a plantilla por defecto?')) return;
+  Object.assign(state, JSON.parse(JSON.stringify(defaultConfig)));
+  // rebind basic fields
+  labNameInput.value = state.labName;
+  taglineInput.value = state.tagline;
+  accentInput.value = state.accent;
+  textColorInput.value = state.textColor;
+  heroInput.value = state.heroImage;
+  phoneInput.value = state.phoneNumber;
+  whatsappInput.value = state.whatsapp;
+  renderSectionsControls(); renderServicesList(); renderHeaderPreview(); updatePreview();
+});
+
+/* ---------- services manager (Option 2) ---------- */
+function renderServicesList(){
+  servicesListEl.innerHTML = '';
+  state.services.forEach((svc, idx)=>{
+    const row = document.createElement('div');
+    row.className = 'service-row';
+    row.dataset.id = svc.id;
+    row.innerHTML = `
+      <label>Ícono (emoji o URL)</label>
+      <input class="svc-icon" type="text" value="${escapeHtml(svc.icon)}" />
+
+      <label>Nombre</label>
+      <input class="svc-name" type="text" value="${escapeHtml(svc.name)}" />
+
+      <label>Precio</label>
+      <input class="svc-price" type="text" value="${escapeHtml(svc.price)}" />
+
+      <label>Descripción</label>
+      <textarea class="svc-desc">${escapeHtml(svc.desc)}</textarea>
+
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn saveSvc">Guardar</button>
+        <button class="btn secondary upSvc">↑</button>
+        <button class="btn secondary downSvc">↓</button>
+        <button class="btn secondary delSvc">Eliminar</button>
+      </div>
+    `;
+    // handlers
+    row.querySelector('.saveSvc').addEventListener('click', ()=>{
+      svc.icon = row.querySelector('.svc-icon').value || '';
+      svc.name = row.querySelector('.svc-name').value || 'Servicio';
+      svc.price = row.querySelector('.svc-price').value || '';
+      svc.desc = row.querySelector('.svc-desc').value || '';
+      renderServicesList(); updatePreview();
+    });
+    row.querySelector('.delSvc').addEventListener('click', ()=>{
+      if(!confirm('Eliminar servicio?')) return;
+      state.services = state.services.filter(s=>s.id!==svc.id);
+      renderServicesList(); updatePreview();
+    });
+    row.querySelector('.upSvc').addEventListener('click', ()=>{
+      const i = state.services.findIndex(s=>s.id===svc.id);
+      if(i>0){ [state.services[i-1], state.services[i]]=[state.services[i], state.services[i-1]]; renderServicesList(); updatePreview(); }
+    });
+    row.querySelector('.downSvc').addEventListener('click', ()=>{
+      const i = state.services.findIndex(s=>s.id===svc.id);
+      if(i>=0 && i<state.services.length-1){ [state.services[i+1], state.services[i]]=[state.services[i], state.services[i+1]]; renderServicesList(); updatePreview(); }
+    });
+    servicesListEl.appendChild(row);
+  });
+}
+addServiceBtn.addEventListener('click', ()=>{
+  const name = svcName.value.trim() || 'Servicio';
+  const price = svcPrice.value.trim() || '';
+  const desc = svcDesc.value.trim() || '';
+  const icon = svcIcon.value.trim() || '';
+  state.services.push({ id: idGen(), name, price, desc, icon });
+  svcName.value=''; svcPrice.value=''; svcDesc.value=''; svcIcon.value='';
+  renderServicesList(); updatePreview();
+});
+clearServiceFormBtn.addEventListener('click', ()=>{ svcName.value=''; svcPrice.value=''; svcDesc.value=''; svcIcon.value=''; });
+
+/* ---------- header small preview ---------- */
+function renderHeaderPreview(){
+  if(state.logoData){
+    appLogoEl.style.backgroundImage = `url(${state.logoData})`;
+    appLogoEl.style.backgroundSize = 'cover';
+    appLogoEl.textContent = '';
+  } else {
+    appLogoEl.style.backgroundImage = '';
+    const initials = (state.labName || 'LAB').split(' ').map(w=>w[0]).slice(0,2).join('').toUpperCase();
+    appLogoEl.textContent = initials;
+  }
+}
+renderHeaderPreview();
+
+/* ---------- services cards html for final page ---------- */
+function servicesCardsHtml(){
+  const wa = state.whatsapp ? state.whatsapp.replace(/\D/g,'') : '';
+  const accent = state.accent || '#0077c2';
+  if(!state.services || !state.services.length) return '';
+
+  return `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;margin-top:18px">
+    ${state.services.map(svc=>{
+      const encodedConsult = encodeURIComponent(`Hola, quiero información sobre: ${svc.name}`);
+      const encodedReserve = encodeURIComponent(`Hola, quiero agendar una cita para: ${svc.name}${svc.price? ' ('+svc.price+')':''}`);
+      const waConsultHref = wa ? `https://wa.me/${wa}?text=${encodedConsult}` : '#';
+      const waReserveHref = wa ? `https://wa.me/${wa}?text=${encodedReserve}` : '#';
+      const iconHtml = svc.icon ? (svc.icon.startsWith('http') ? `<img src="${escapeHtml(svc.icon)}" style="width:64px;height:64px;object-fit:cover;border-radius:8px">` : `<div style="width:64px;height:64px;border-radius:8px;background:#f3f6fb;display:flex;align-items:center;justify-content:center;font-size:28px">${escapeHtml(svc.icon)}</div>`) : `<div style="width:64px;height:64px;border-radius:8px;background:#f3f6fb;display:flex;align-items:center;justify-content:center;font-size:22px;color:#9aa9bf">${escapeHtml((svc.name||'').slice(0,2))}</div>`;
+
+      return `<article class="service-card" role="article" aria-label="${escapeHtml(svc.name)}">
+        ${iconHtml}
+        <div style="flex:1">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="font-weight:700">${escapeHtml(svc.name)}</div>
+            <div style="margin-left:auto;color:${accent};font-weight:700">${escapeHtml(svc.price||'')}</div>
+          </div>
+          ${ svc.desc ? `<div style="color:#444;margin-top:8px">${escapeHtml(svc.desc)}</div>` : '' }
+          <div class="service-btns" style="margin-top:12px">
+            ${ wa ? `<a href="${waConsultHref}" target="_blank" class="service-btn" style="background:#25D366">💬 Consultar</a>` : `<a href="#" class="service-btn" style="background:#bdbdbd;pointer-events:none;opacity:0.6">💬 Consultar</a>` }
+            ${ wa ? `<a href="${waReserveHref}" target="_blank" class="service-btn" style="background:${accent}">📅 Reservar</a>` : `<a href="#" class="service-btn" style="background:#bdbdbd;pointer-events:none;opacity:0.6">📅 Reservar</a>` }
+          </div>
+        </div>
+      </article>`;
+    }).join('')}
+  </div>`;
+}
+
+/* ---------- generate final HTML ---------- */
+function generateFinalHtml(){
+  const accent = state.accent || '#0077c2';
+  const textColor = state.textColor || '#222';
+  const phone = state.phoneNumber ? state.phoneNumber.trim() : '';
+  const wa = state.whatsapp ? state.whatsapp.trim().replace(/\D/g,'') : '';
+
+  const sectionsHtml = state.sections.map(s=>{
+    const isServicios = s.title.trim().toLowerCase() === 'servicios';
+    const isContacto = s.title.trim().toLowerCase() === 'contacto';
+    const callBtn = phone ? `<a href="tel:${phone}" style="display:inline-block;padding:10px 14px;background:${accent};color:white;border-radius:8px;text-decoration:none;font-weight:700;margin-right:8px">📞 Llamar</a>` : '';
+    const waBtn = wa ? `<a href="https://wa.me/${wa}" target="_blank" style="display:inline-block;padding:10px 14px;background:#25D366;color:white;border-radius:8px;text-decoration:none;font-weight:700">💬 WhatsApp</a>` : '';
+
+    return `<section style="padding:34px 18px;border-top:1px solid rgba(0,0,0,0.03)"><div style="max-width:1100px;margin:0 auto">
+      <h2 style="color:${accent};margin:0 0 12px 0;font-size:20px">${escapeHtml(s.title)}</h2>
+      <div style="color:${textColor}">${s.content}</div>
+      ${ isServicios ? servicesCardsHtml() : '' }
+      ${ isContacto ? `<div style="margin-top:16px">${callBtn}${waBtn}</div>` : '' }
+    </div></section>`;
+  }).join('\n');
+
+  const logoHtml = state.logoData ? `<img src="${state.logoData}" alt="${escapeHtml(state.labName)}" style="width:72px;height:72px;object-fit:cover;border-radius:10px">` : `<div style="width:72px;height:72px;border-radius:10px;background:linear-gradient(180deg,#f3f6fb,#e9f2fb);display:flex;align-items:center;justify-content:center;font-weight:700;color:#9aa9bf">${escapeHtml((state.labName||'').split(' ').map(w=>w[0]).slice(0,2).join(''))}</div>`;
+
+  const heroHtml = state.heroImage ? `<div style="max-width:1100px;margin:18px auto"><img src="${escapeHtml(state.heroImage)}" alt="" style="width:100%;border-radius:12px;object-fit:cover"></div>` : '';
+
+  const html = `<!doctype html><html lang="es"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>${escapeHtml(state.labName)}</title><meta name="description" content="${escapeHtml(state.tagline)}"><style>:root{--accent:${accent};--text:${textColor}}*{box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial;margin:0;color:var(--text);background:linear-gradient(180deg,#fafcff,#ffffff)}.topbar{padding:18px;background:white;box-shadow:0 2px 8px rgba(16,24,40,0.04)}.container{max-width:1100px;margin:0 auto;padding:20px}.hero{display:flex;gap:18px;align-items:center;padding:34px 20px;background:linear-gradient(90deg, rgba(0,0,0,0.02), rgba(255,255,255,0));}.hero .left{flex:1}.hero .title{font-size:28px;margin:0;color:var(--accent)}.hero .subtitle{color:#6b7280;margin-top:6px}.hero .image{width:260px;height:150px;border-radius:10px;background:#eef6ff;background-size:cover;background-position:center}.service-card{background:white;border-radius:12px;padding:18px;display:flex;gap:18px;border:1px solid #e8efff;box-shadow:0 2px 6px rgba(0,0,0,0.06);margin-bottom:18px}.s-info h3{margin:0}.price{font-weight:bold;margin:6px 0;font-size:18px}.s-icon{min-width:60px;display:flex;align-items:center}.buttons{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap}.btn{padding:10px 14px;border-radius:8px;text-decoration:none;color:white;font-weight:bold;display:inline-block}.btn.consult{background:#25D366}.btn.reserve{background:var(--accent)}.box{background:white;padding:18px;border-radius:10px;border:1px solid #e8efff;margin-top:20px}footer{padding:28px 0;text-align:center;color:#6b7280;margin-top:20px}@media (max-width:820px){.hero{flex-direction:column;align-items:flex-start}.hero .image{width:100%;height:160px}.container{padding:14px}}</style></head><body><header class="topbar"><div class="container" style="display:flex;align-items:center;gap:16px"><div style="display:flex;align-items:center;gap:14px">${logoHtml}<div><div style="font-weight:800">${escapeHtml(state.labName)}</div><div style="color:#6b7280">${escapeHtml(state.tagline)}</div></div></div></div></header>${heroHtml}<div class="container">${sectionsHtml}</div><footer><div class="container">© ${new Date().getFullYear()} ${escapeHtml(state.labName)} — Todos los derechos reservados</div></footer></body></html>`;
+
+  return html;
+}
+
+/* ---------- preview / download / open ---------- */
+function updatePreview(){
+  const html = generateFinalHtml();
+  const blob = new Blob([html], { type:'text/html' });
+  const url = URL.createObjectURL(blob);
+  previewIframe.src = url;
+  setTimeout(()=>URL.revokeObjectURL(url),8000);
+}
+
+generateBtn.addEventListener('click', ()=>{
+  updatePreview();
+  try{ navigator.clipboard.writeText('Previsualización actualizada'); }catch(e){}
+  alert('Previsualización actualizada. Descarga el HTML con "Descargar .html".');
+});
+
+downloadBtn.addEventListener('click', ()=>{
+  const html = generateFinalHtml();
+  const blob = new Blob([html], { type:'text/html' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (state.labName || 'landing').replace(/\s+/g,'_').toLowerCase()+'.html';
+  document.body.appendChild(a);
+  a.click();
+  setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 3000);
+});
+
+openNewTabBtn.addEventListener('click', ()=>{
+  const html = generateFinalHtml();
+  const url = URL.createObjectURL(new Blob([html], { type:'text/html' }));
+  window.open(url, '_blank');
+  setTimeout(()=> URL.revokeObjectURL(url), 10000);
+});
+
+/* ---------- init ---------- */
+renderSectionsControls();
+renderServicesList();
+renderHeaderPreview();
+updatePreview();
+
+</script>
+</body>
+</html>
